@@ -1,33 +1,17 @@
 Active Shipping
 ===============
 
-[![Build Status](https://travis-ci.org/spree-contrib/spree_active_shipping.svg?branch=2-4-stable)](https://travis-ci.org/spree-contrib/spree_active_shipping)
-
-This is a Spree extension that wraps the popular [active_shipping](http://github.com/Shopify/active_shipping/tree/master) plugin.
+This is a Solidus extension that wraps the popular [active_shipping](http://github.com/Shopify/active_shipping/tree/master) plugin.
 
 Installation
 ------------
 
 **1.** Add the gem to your application's Gemfile:
 
-We highly recommend using the stable branches of this gem. If you were using version 1.3, you can place this line inside your application's Gemfile:
-
-```ruby
-gem 'spree_active_shipping', :git => "git://github.com/spree/spree_active_shipping", :branch => "1-3-stable"
-```
-
 To install the latest edge version of this extension, place this line inside your application's Gemfile:
 
-- To use the latest edge code in master branch:
-
 ```ruby
-gem 'spree_active_shipping', :git => "git://github.com/spree/spree_active_shipping"
-```
-
-- To use a specific branch specified in the Versionfile for your version of Spree:
-
-```ruby
-gem 'spree_active_shipping', :git => "git://github.com/spree/spree_active_shipping", :branch => '1-3-stable'
+gem 'solidus_active_shipping', :git => "git://github.com/solidusio-contrib/solidus_active_shipping"
 ```
 
 **2.** Install migrations and migrate database:
@@ -96,7 +80,7 @@ the rate hash that is parsed by the calculator has service descriptions as keys,
   rate # $9.25
 ```
 
-you can see the rates are given in cents from FedEx (in the rate hash example above), ```spree_active_shipping``` converts them dividing them by 100 before sending them to you
+you can see the rates are given in cents from FedEx (in the rate hash example above), ```solidus_active_shipping``` converts them dividing them by 100 before sending them to you
 
 **Note:** if you want to integrate to a new carrier service that is not listed below please take care when trying to match the service name key to theirs, there are times when they create dynamic naming conventions, please take as an example **USPS**, you can see the implementation of USPS has the **compute_packages** method overridden to match against a **service_code** key that had to be added to calculator services ( Issue #103 )
 
@@ -120,7 +104,7 @@ Spree::ActiveShipping::Config[:default_weight]
 ```
 
 ## Weight units
-Weights are expected globally inside ```spree_active_shipping``` to be entered in a unit that can be divided to oz and a global variable was added to help with unit conversion
+Weights are expected globally inside ```solidus_active_shipping``` to be entered in a unit that can be divided to oz and a global variable was added to help with unit conversion
 
 ```ruby
 Spree::ActiveShipping::Config[:unit_multiplier]
@@ -139,7 +123,7 @@ Spree::ActiveShipping::Config[:unit_multiplier] = 0.0283495
 Cache
 ------------
 
-When Spree tries to get rates for a given shipment it calls **Spree::Stock::Estimator**, this class is in charge of getting the rates back from any calculator active for a shipment, the way the estimator determines the shipping methods that will apply to the shipment varies from within spree versions but the general idea is this:
+When Solidus tries to get rates for a given shipment it calls **Spree::Stock::Estimator**, this class is in charge of getting the rates back from any calculator active for a shipment, the way the estimator determines the shipping methods that will apply to the shipment varies from within spree versions but the general idea is this:
 
 **NOTE:** Shipping methods are tied to calculators
 
@@ -154,7 +138,7 @@ When Spree tries to get rates for a given shipment it calls **Spree::Stock::Esti
   end
 ```
 
-The money line for **spree_active_shipping** is when it calls the calculator's ```available?``` method, this method is actually calling the carrier services, and it checks for rates or errors in the form of ```Spree::ShippingError```, if the rates are there for the specified shipment, the calculator will store the parsed rates with a specific key for each package inside the cache, consider the following example to see why this works and why this is necessary:
+The money line for **solidus_active_shipping** is when it calls the calculator's ```available?``` method, this method is actually calling the carrier services, and it checks for rates or errors in the form of ```Spree::ShippingError```, if the rates are there for the specified shipment, the calculator will store the parsed rates with a specific key for each package inside the cache, consider the following example to see why this works and why this is necessary:
 
 - User orders N amount of products
 - All of the products from this order are stored in Stock Location 1
@@ -179,21 +163,6 @@ The money line for **spree_active_shipping** is when it calls the calculator's `
 - when it hits the last calculator (**FedEx International Priority**) it will find that the cache doesn't have any rates for the given key, and the method ```available?``` called from the Estimator will return false thus removing the calculator's shipping method from the list of available calculators and won't return any rates back for it
 - Consequently since this 3rd calculator (**FedEx International Priority**) is an international calculator it would have been removed as well by the line that checks if any shipping method is allowed in already defined Zones.
 
-Installation
-------------
-
-1. Add the following to your application's Gemfile
-
-```ruby
-gem 'spree_active_shipping'
-```
-
-2. Run bundler
-
-```
-bundle install
-```
-
 Testing
 -------
 
@@ -202,8 +171,3 @@ Be sure to bundle your dependencies and then create a dummy test app for the spe
     $ bundle
     $ bundle exec rake test_app
     $ bundle exec rspec spec
-
-Further Reading
----------------
-
-Andrea Singh has also written an excellent [blog post](http://blog.madebydna.com/all/code/2010/05/26/setting-up-usps-shipping-with-spree.html) covering the use of this extension in detail. It is rather old and somewhat outdated.

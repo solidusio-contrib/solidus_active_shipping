@@ -12,13 +12,13 @@ module ActiveShipping
       build(:inventory_unit, variant: variant, order: order)
     end
 
-    let(:country) { mock_model Spree::Country, :iso => "CA", :state_name => "Quebec", :state => nil }
-    let(:address) { mock_model Spree::Address, :country => country, :state_name => country.state_name, :city => "Montreal", :zipcode => "H2B", :state => nil }
+    let(:country) { build(:country, :iso => "CA") }
+    let(:address) { build(:address, :country => country, :state_name => "Quebec", :city => "Montreal", :zipcode => "H2B", :state => nil) }
     let(:usa) { FactoryGirl.create(:country, :name => "USA", :iso => "US") }
     let(:state) { FactoryGirl.create(:state, country: usa, abbr: 'MD', name: 'Maryland')}
     let(:us_address) { FactoryGirl.create(:address, :country => usa, :state => state, :city => "Chevy Chase", :zipcode => "20815") }
-    let(:ca_order) { mock_model(Spree::Order, :ship_address => address) }
-    let(:us_order) { mock_model(Spree::Order, :ship_address => us_address) }
+    let(:ca_order) { build(:order, ship_address: address) }
+    let(:us_order) { build(:order, ship_address: us_address) }
     let(:package1) { mock_model(Spree::ProductPackage, :length => 12, :width => 24, :height => 47, :weight => 36) }
     let(:package2) { mock_model(Spree::ProductPackage, :length => 6, :width => 6, :height => 51, :weight => 43) }
     let(:variant1) { build(:variant, :weight => 20.0) }
@@ -27,8 +27,23 @@ module ActiveShipping
     let(:variant4) { build(:variant, :weight => 100.0) }
     let(:variant5) { build(:variant, :weight => 0) }
     let(:variant6) { build(:variant, :weight => -1.0) }
-    let(:variant7) { mock_model(Spree::Variant, :weight => 29.0, :product => mock_model(Spree::Product, :product_packages => [package1, package2])) }
-    let(:variant8) { mock_model(Spree::Variant, :weight => 5.25, :product => mock_model(Spree::Product, :product_packages => [])) }
+    let(:variant7) do
+      build(
+        :variant,
+        :weight => 29.0,
+        :product => build(
+          :product,
+          :product_packages => [package1, package2]
+        )
+      )
+    end
+    let(:variant8) do
+      build(
+        :variant,
+        :weight => 5.25,
+        :product => build(:product, :product_packages => [])
+      )
+    end
     let(:california) { FactoryGirl.create(:state, country: usa, abbr: 'CA', name: 'California') }
     let(:stock_location) { FactoryGirl.create(:stock_location, :address1 => '1313 S Harbor Blvd', :address2 => '', :city => 'Anaheim', :state => california, :country => usa, :phone => '7147814000', :active => 1) }
 
