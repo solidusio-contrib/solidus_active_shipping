@@ -24,6 +24,8 @@ require 'spree/testing_support/url_helpers'
 
 Dir[File.join(File.dirname(__FILE__), "factories/*.rb")].each {|f| require f }
 
+require 'rspec/active_model/mocks'
+
 RSpec.configure do |config|
   config.include Spree::TestingSupport::ControllerRequests, type: :controller
   config.include FactoryGirl::Syntax::Methods
@@ -51,5 +53,5 @@ RSpec.configure do |config|
 
   # Upgrade to rspec 3.x
   config.infer_spec_type_from_file_location!
-
+  config.example_status_persistence_file_path = "./spec/examples.txt"
 end
