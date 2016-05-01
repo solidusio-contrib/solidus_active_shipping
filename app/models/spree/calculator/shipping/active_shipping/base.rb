@@ -9,7 +9,7 @@ module Spree
   module Calculator::Shipping
     module ActiveShipping
       class Base < ShippingCalculator
-        include ActiveMerchant::Shipping
+        include ActiveShipping
 
         def self.service_name
           self.description
@@ -49,15 +49,15 @@ module Spree
         def timing(line_items)
           order = line_items.first.order
           # TODO: Figure out where stock_location is supposed to come from.
-          origin= Location.new(:country => stock_location.country.iso,
-                               :city => stock_location.city,
-                               :state => (stock_location.state ? stock_location.state.abbr : stock_location.state_name),
-                               :zip => stock_location.zipcode)
+          origin = ::ActiveShipping::Location.new(country: stock_location.country.iso,
+                               city: stock_location.city,
+                               state: (stock_location.state ? stock_location.state.abbr : stock_location.state_name),
+                               zip: stock_location.zipcode)
           addr = order.ship_address
-          destination = Location.new(:country => addr.country.iso,
-                                     :state => (addr.state ? addr.state.abbr : addr.state_name),
-                                     :city => addr.city,
-                                     :zip => addr.zipcode)
+          destination = ::ActiveShipping::Location.new(country: addr.country.iso,
+                                     state: (addr.state ? addr.state.abbr : addr.state_name),
+                                     city: addr.city,
+                                     zip: addr.zipcode)
           timings_result = Rails.cache.fetch(cache_key(package)+"-timings") do
             retrieve_timings(origin, destination, packages(order))
           end
@@ -104,9 +104,9 @@ module Spree
             end
             rate_hash = Hash[*rates.flatten]
             return rate_hash
-          rescue ActiveMerchant::ActiveMerchantError => e
+          rescue ::ActiveShipping::Error => e
 
-            if [ActiveMerchant::ResponseError, ActiveMerchant::Shipping::ResponseError].include?(e.class) && e.response.is_a?(ActiveMerchant::Shipping::Response)
+            if [::ActiveShipping::ResponseError].include?(e.class) && e.response.is_a?(::ActiveShipping::Response)
               params = e.response.params
               if params.has_key?("Response") && params["Response"].has_key?("Error") && params["Response"]["Error"].has_key?("ErrorDescription")
                 message = params["Response"]["Error"]["ErrorDescription"]
@@ -134,8 +134,8 @@ module Spree
               response = carrier.find_time_in_transit(origin, destination, packages)
               return response
             end
-          rescue ActiveMerchant::Shipping::ResponseError => re
-            if re.response.is_a?(ActiveMerchant::Shipping::Response)
+          rescue ::ActiveShipping::ResponseError => re
+            if re.response.is_a?(::ActiveShipping::Response)
               params = re.response.params
               if params.has_key?("Response") && params["Response"].has_key?("Error") && params["Response"]["Error"].has_key?("ErrorDescription")
                 message = params["Response"]["Error"]["ErrorDescription"]
@@ -278,10 +278,10 @@ module Spree
         end
 
         def build_location address
-          Location.new(:country => address.country.iso,
-                       :state   => fetch_best_state_from_address(address),
-                       :city    => address.city,
-                       :zip     => address.zipcode)
+          ::ActiveShipping::Location.new(country: address.country.iso,
+                       state: fetch_best_state_from_address(address),
+                       city: address.city,
+                       zip: address.zipcode)
         end
 
         def retrieve_rates_from_cache package, origin, destination

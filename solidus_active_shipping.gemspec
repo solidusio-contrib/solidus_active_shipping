@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency('solidus', '~> 1.0')
-  s.add_dependency('active_shipping', '~> 0.12.6')
+  s.add_dependency('active_shipping', '~> 1.7.0')
   s.add_development_dependency 'pry'
   s.add_development_dependency 'webmock'
   s.add_development_dependency 'simplecov'

@@ -1,5 +1,5 @@
 require 'spec_helper'
-include ActiveMerchant::Shipping
+include ActiveShipping
 
 module ActiveShipping
   describe Spree::Calculator::Shipping do
@@ -29,7 +29,7 @@ module ActiveShipping
       order
     end
 
-    let(:carrier) { ActiveMerchant::Shipping::USPS.new(:login => "FAKEFAKEFAKE") }
+    let(:carrier) { ActiveShipping::USPS.new(:login => "FAKEFAKEFAKE") }
     let(:calculator) { Spree::Calculator::Shipping::Usps::ExpressMail.new }
     let(:response) { double('response', :rates => rates, :params => {}) }
     let(:package) { order.shipments.first.to_package }
@@ -86,7 +86,7 @@ module ActiveShipping
 
       context "when there is an error retrieving the rates" do
         before do
-          carrier.should_receive(:find_rates).and_raise(ActiveMerchant::ActiveMerchantError)
+          carrier.should_receive(:find_rates).and_raise(ActiveShipping::ResponseError)
         end
 
         it "should return false" do

@@ -34,7 +34,7 @@ module Spree
             :test => Spree::ActiveShipping::Config[:test_mode]
           }
 
-          ActiveMerchant::Shipping::USPS.new(carrier_details)
+          ::ActiveShipping::USPS.new(carrier_details)
         end
 
         private
@@ -50,9 +50,9 @@ module Spree
             end
             rate_hash = Hash[*rates.flatten]
             return rate_hash
-          rescue ActiveMerchant::ActiveMerchantError => e
+          rescue ::ActiveShipping::Error => e
 
-            if [ActiveMerchant::ResponseError, ActiveMerchant::Shipping::ResponseError].include?(e.class) && e.response.is_a?(ActiveMerchant::Shipping::Response)
+            if [::ActiveShipping::ResponseError].include?(e.class) && e.response.is_a?(::ActiveShipping::Response)
               params = e.response.params
               if params.has_key?("Response") && params["Response"].has_key?("Error") && params["Response"]["Error"].has_key?("ErrorDescription")
                 message = params["Response"]["Error"]["ErrorDescription"]
