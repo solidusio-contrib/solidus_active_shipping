@@ -3,7 +3,7 @@ Active Shipping
 
 This is a Solidus extension that wraps the popular [active_shipping](http://github.com/Shopify/active_shipping/tree/master) plugin.
 
-[![Build Status](https://travis-ci.org/solidusio-contrib/solidus_active_shipping.svg?branch=master)](https://travis-ci.org/solidusio/solidus_virtual_gift_card)
+[![Build Status](https://travis-ci.org/solidusio-contrib/solidus_active_shipping.svg?branch=master)](https://travis-ci.org/solidusio-contrib/solidus_active_shipping)
 
 Installation
 ------------
