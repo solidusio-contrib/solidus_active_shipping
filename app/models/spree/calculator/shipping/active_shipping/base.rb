@@ -9,7 +9,6 @@ module Spree
   module Calculator::Shipping
     module ActiveShipping
       class Base < ShippingCalculator
-        include ActiveShipping
 
         def self.service_name
           self.description
@@ -231,22 +230,22 @@ module Spree
           item_specific_packages = convert_package_to_item_packages_array(package)
 
           if max_weight <= 0
-            packages << Package.new(weights.sum, dimensions, :units => units)
+            packages << ::ActiveShipping::Package.new(weights.sum, dimensions, :units => units)
           else
             package_weight = 0
             weights.each do |content_weight|
               if package_weight + content_weight <= max_weight
                 package_weight += content_weight
               else
-                packages << Package.new(package_weight, dimensions, :units => units)
+                packages << ::ActiveShipping::Package.new(package_weight, dimensions, :units => units)
                 package_weight = content_weight
               end
             end
-            packages << Package.new(package_weight, dimensions, :units => units) if package_weight > 0
+            packages << ::ActiveShipping::Package.new(package_weight, dimensions, :units => units) if package_weight > 0
           end
 
           item_specific_packages.each do |package|
-            packages << Package.new(package.at(0), [package.at(1), package.at(2), package.at(3)], :units => :imperial)
+            packages << ::ActiveShipping::Package.new(package.at(0), [package.at(1), package.at(2), package.at(3)], :units => :imperial)
           end
 
           packages
