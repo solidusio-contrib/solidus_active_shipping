@@ -9,4 +9,7 @@ group :development, :test do
   gem 'ffaker'
 end
 
+gem 'pg'
+gem 'mysql2'
+
 gemspec
