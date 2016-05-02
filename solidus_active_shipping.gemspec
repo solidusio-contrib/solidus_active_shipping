@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_paths = ["lib"]
 
-  s.add_dependency('solidus', '~> 1.0.0')
+  s.add_dependency('solidus', '~> 1.0')
   s.add_dependency('active_shipping', '~> 0.12.6')
   s.add_development_dependency 'pry'
   s.add_development_dependency 'webmock'
