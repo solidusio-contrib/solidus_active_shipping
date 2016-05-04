@@ -68,4 +68,6 @@ RSpec.configure do |config|
   # Upgrade to rspec 3.x
   config.infer_spec_type_from_file_location!
   config.example_status_persistence_file_path = "./spec/examples.txt"
+
+  config.include FeatureHelper, type: :feature
 end
