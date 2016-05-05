@@ -13,7 +13,7 @@ describe "Checkout", type: :feature do
       company: 'Company',
       address1: '4157 Lawnview Ave',
       city: 'Dallas',
-      state: create(:state, state_code: 'TX'),
+      state: create(:state_with_autodiscover, state_code: 'TX'),
       zipcode: '75227',
       phone: "(555) 555-5555"
     }

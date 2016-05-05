@@ -4,7 +4,7 @@ shared_context 'checkout setup' do
     address1: '1600 Pennsylvania Ave NW',
     city: 'Washington',
     zipcode: '20500',
-    state: create(:state, state_code: 'DC')
+    state: create(:state_with_autodiscover, state_code: 'DC')
   }
   let!(:shipping_method) { create(:shipping_method, calculator: Spree::Calculator::Shipping::Ups::NextDayAir.new) }
   let!(:payment_method) { create(:check_payment_method) }
