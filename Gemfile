@@ -7,6 +7,7 @@ gem 'factory_girl_rails', '~> 4.5.0', group: :test
 
 group :development, :test do
   gem 'ffaker'
+  gem 'capybara-screenshot'
 end
 
 gem 'pg'

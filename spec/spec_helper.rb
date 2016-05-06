@@ -57,10 +57,8 @@ RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
-  # If you're not using ActiveRecord, or you'd prefer not to run each of your
-  # examples within a transaction, remove the following line or assign false
-  # instead of true.
-  config.use_transactional_fixtures = true
+  # Allow JS specs to work.
+  config.use_transactional_fixtures = false
 
   #config.include Spree::UrlHelpers
   #config.include Devise::TestHelpers, :type => :controller
@@ -68,4 +66,6 @@ RSpec.configure do |config|
   # Upgrade to rspec 3.x
   config.infer_spec_type_from_file_location!
   config.example_status_persistence_file_path = "./spec/examples.txt"
+
+  config.include FeatureHelper, type: :feature
 end
