@@ -20,8 +20,11 @@ describe Spree::Calculator::Shipping::Usps do
     expect(order.shipments.count).to eq 1
     Spree::ActiveShipping::Config.set(units: 'imperial')
     Spree::ActiveShipping::Config.set(unit_multiplier: 1)
-    allow(calculator).to receive(:carrier) { carrier }
-    Rails.cache.clear
+    Spree::ActiveShipping::Config.set(handling_fee: 0)
+    calculator.stub(:carrier).and_return(carrier)
+    # Since the response can be cached, we explicitly clear cache
+    # so each test can be run from a clean slate
+    Rails.cache.delete(calculator.send(:cache_key, package))
   end
 
   describe 'package.order' do
@@ -55,8 +58,8 @@ describe Spree::Calculator::Shipping::Usps do
       end
 
       it 'should include handling_fee when configured' do
-        allow(calculator.class).to receive(:service_code) { 'dom:3' }
         Spree::ActiveShipping::Config.set(handling_fee: 100)
+        allow(calculator.class).to receive(:service_code) { 'dom:3' }
         expect(subject).to eq 10.99
       end
 

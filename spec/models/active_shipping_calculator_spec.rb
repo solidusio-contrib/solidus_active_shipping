@@ -23,8 +23,11 @@ describe Spree::Calculator::Shipping do
     expect(order.shipments.count).to eq 1
     Spree::ActiveShipping::Config.set(units: 'imperial')
     Spree::ActiveShipping::Config.set(unit_multiplier: 1)
+    Spree::ActiveShipping::Config.set(handling_fee: 0)
     calculator.stub(:carrier).and_return(carrier)
-    Rails.cache.clear
+    # Since the response can be cached, we explicitly clear cache
+    # so each test can be run from a clean slate
+    Rails.cache.delete(calculator.send(:cache_key, package))
   end
 
   describe 'package.order' do
@@ -119,6 +122,9 @@ describe Spree::Calculator::Shipping do
     end
 
     it 'should check the cache first before finding rates' do
+      # Since the cache is cleared between the tests, cache.fetch will return a miss,
+      # but by passing a block { Hash.new }, the return value of the block will be
+      # written under the given cache key
       Rails.cache.fetch(calculator.send(:cache_key, package)) { Hash.new }
       expect(carrier).not_to receive(:find_rates)
       subject
@@ -135,8 +141,8 @@ describe Spree::Calculator::Shipping do
       end
 
       it 'should include handling_fee when configured' do
-        allow(calculator.class).to receive(:description) { 'Bogus Calculator' }
         Spree::ActiveShipping::Config.set(handling_fee: 100)
+        allow(calculator.class).to receive(:description) { 'Bogus Calculator' }
         expect(subject).to eq 10.99
       end
 
