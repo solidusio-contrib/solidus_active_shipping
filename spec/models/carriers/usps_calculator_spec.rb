@@ -16,7 +16,6 @@ describe Spree::Calculator::Shipping::Usps do
 
   before(:each) do
     order.create_proposed_shipments
-    expect(order.shipments.count).to eq 1
     Spree::ActiveShipping::Config.set(units: 'imperial')
     Spree::ActiveShipping::Config.set(unit_multiplier: 1)
     Spree::ActiveShipping::Config.set(handling_fee: 0)
