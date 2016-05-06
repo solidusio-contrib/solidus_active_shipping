@@ -1,13 +1,10 @@
 shared_context 'UPS setup' do
   before do
-    WebMock.allow_net_connect!
-    shipping_config = Spree::ActiveShippingConfiguration.new
-    shipping_config.ups_login = 'solidusdev'
-    shipping_config.ups_password = 'S0lidusdev'
-    shipping_config.ups_key = '9D0B1B1E0A6389A8'
-  end
-
-  after do
-    WebMock.disable_net_connect!
+    login_as_admin
+    visit spree.edit_admin_active_shipping_settings_path
+    fill_in 'UPS Login', with: 'solidusdev'
+    fill_in 'UPS Password', with: 'S0lidusdev'
+    fill_in 'UPS Key', with: '9D0B1B1E0A6389A8'
+    click_button 'Update'
   end
 end
