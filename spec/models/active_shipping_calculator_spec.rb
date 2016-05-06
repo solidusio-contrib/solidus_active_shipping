@@ -6,26 +6,12 @@ module ActiveShipping
     # (no login information needed)
 
     let(:address) { FactoryGirl.create(:address) }
+    let(:variant_1) { FactoryGirl.create(:variant, weight: 1) }
+    let(:variant_2) { FactoryGirl.create(:variant, weight: 2) }
     let!(:stock_location) { FactoryGirl.create(:stock_location) }
     let!(:order) do
-      order = FactoryGirl.create(:order_with_line_items, ship_address: address, line_items_count: 2)
-      order.line_items.first.tap do |line_item|
-        line_item.quantity = 2
-        line_item.variant.save
-        line_item.variant.weight = 1
-        line_item.variant.save
-        line_item.save
-        # product packages?
-      end
-      order.line_items.last.tap do |line_item|
-        line_item.quantity = 2
-        line_item.variant.save
-        line_item.variant.weight = 2
-        line_item.variant.save
-        line_item.save
-        # product packages?
-      end
-      order
+      FactoryGirl.create(:order_with_line_items, ship_address: address, line_items_count: 2,
+                         line_items_attributes: [{ quantity: 2, variant: variant_1}, { quantity: 2, variant: variant_2 }] )
     end
 
     let(:carrier) { Spree::ActiveShipping::BogusCarrier.new }
