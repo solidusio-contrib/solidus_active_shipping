@@ -12,7 +12,6 @@ describe Spree::Calculator::Shipping::Usps do
 
   let(:carrier) { ActiveShipping::USPS.new(login: 'FAKEFAKEFAKE') }
   let(:calculator) { Spree::Calculator::Shipping::Usps::ExpressMail.new }
-  let(:response) { double('response', rates: rates, params: {}) }
   let(:package) { order.shipments.first.to_package }
 
   before(:each) do
@@ -21,7 +20,10 @@ describe Spree::Calculator::Shipping::Usps do
     Spree::ActiveShipping::Config.set(units: 'imperial')
     Spree::ActiveShipping::Config.set(unit_multiplier: 1)
     Spree::ActiveShipping::Config.set(handling_fee: 0)
-    calculator.stub(:carrier).and_return(carrier)
+
+    stub_request(:get, %r{http:\/\/production.shippingapis.com\/ShippingAPI.dll.*})
+        .to_return(body: fixture(:normal_rates_request))
+
     # Since the response can be cached, we explicitly clear cache
     # so each test can be run from a clean slate
     Rails.cache.delete(calculator.send(:cache_key, package))
@@ -38,29 +40,19 @@ describe Spree::Calculator::Shipping::Usps do
     subject { calculator.compute(package) }
 
     it 'should use the carrier supplied in the initializer' do
-      stub_request(:get, %r{http:\/\/production.shippingapis.com\/ShippingAPI.dll.*})
-          .to_return(body: fixture(:normal_rates_request))
       expect(subject).to eq 14.1
     end
 
     context 'with valid response' do
-      let(:rates) do
-        [double('rate', service_code: '3', price: 999)]
-      end
-
-      before do
-        allow(carrier).to receive(:find_rates) { response }
-      end
-
       it "should return rate based on calculator's service_code" do
         allow(calculator.class).to receive(:service_code) { 'dom:3' }
-        expect(subject).to eq 9.99
+        expect(subject).to eq 14.1
       end
 
       it 'should include handling_fee when configured' do
         Spree::ActiveShipping::Config.set(handling_fee: 100)
         allow(calculator.class).to receive(:service_code) { 'dom:3' }
-        expect(subject).to eq 10.99
+        expect(subject).to eq 15.1
       end
 
       it 'should return nil if service_code is not found in rate_hash' do
