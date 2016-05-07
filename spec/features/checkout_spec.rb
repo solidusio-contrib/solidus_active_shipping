@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe "Checkout", type: :feature do
+  include_context 'US stock location'
   include_context 'checkout setup'
   include CheckoutHelper
 
