@@ -76,3 +76,18 @@ en:
     usps_settings: "USPS Settings"
     canada_post_settings: "Canada Post Settings"
     origin_address_settings: "Origin Address Settings"
+    ups_login: 'UPS Login'
+    ups_password: 'UPS Password'
+    ups_key: 'UPS Key'
+    shipper_number: 'Shipper Number'
+    fedex_login: 'Fedex Login'
+    fedex_password: 'Fedex Password'
+    fedex_account: 'Fedex Account'
+    fedex_key: 'Fedex Key'
+    usps_login: 'USPS Login'
+    canada_post_login: 'Canada Post Login'
+    units: 'Units'
+    unit_multiplier: 'Unit Multiplier'
+    default_weight: 'Default Weight'
+    handling_fee: 'Handling Fee'
+    max_weight_per_package: 'Max Weight Per Package'
