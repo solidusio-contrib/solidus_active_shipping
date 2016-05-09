@@ -15,7 +15,6 @@ describe Spree::Calculator::Shipping do
 
   let(:carrier) { Spree::ActiveShipping::BogusCarrier.new }
   let(:calculator) { Spree::Calculator::Shipping::ActiveShipping::BogusCalculator.new }
-  let(:response) { double('response', rates: rates, params: {}) }
   let(:package) { order.shipments.first.to_package }
 
   before(:each) do
@@ -23,7 +22,6 @@ describe Spree::Calculator::Shipping do
     Spree::ActiveShipping::Config.set(units: 'imperial')
     Spree::ActiveShipping::Config.set(unit_multiplier: 1)
     Spree::ActiveShipping::Config.set(handling_fee: 0)
-    allow(calculator).to receive(:carrier).and_return(carrier)
     # Since the response can be cached, we explicitly clear cache
     # so each test can be run from a clean slate
     Rails.cache.delete(calculator.send(:cache_key, package))
@@ -38,14 +36,6 @@ describe Spree::Calculator::Shipping do
 
   describe 'available' do
     context 'when rates are available' do
-      let(:rates) do
-        [double('rate', service_name: 'Bogus Calculator', price: 1)]
-      end
-
-      before do
-        allow(carrier).to receive(:find_rates) { response }
-      end
-
       it 'should return true' do
         expect(calculator.available?(package)).to eq true
       end
@@ -57,10 +47,13 @@ describe Spree::Calculator::Shipping do
     end
 
     context 'when rates are not available' do
-      let(:rates) { [] }
+      let(:invalid_response) do
+        ::ActiveShipping::RateResponse.new(true, "success!", {}, :rates => [], :xml => "")
+      end
 
       before do
-        allow(carrier).to receive(:find_rates) { response }
+        allow(calculator).to receive(:carrier).and_return(carrier)
+        allow(carrier).to receive(:find_rates).and_return(invalid_response)
       end
 
       it 'should return false' do
@@ -70,6 +63,7 @@ describe Spree::Calculator::Shipping do
 
     context 'when there is an error retrieving the rates' do
       before do
+        allow(calculator).to receive(:carrier).and_return(carrier)
         allow(carrier).to receive(:find_rates).and_raise(::ActiveShipping::ResponseError)
       end
 
@@ -80,10 +74,6 @@ describe Spree::Calculator::Shipping do
   end
 
   describe 'available?' do
-    let(:rates) do
-      [double('rate', service_name: 'Bogus Calculator', price: 999)]
-    end
-
     # regression test for #164 and #171
     it 'should not return rates if the weight requirements for the destination country are not met' do
       # if max_weight_for_country is nil -> the carrier does not ship to that country
@@ -97,12 +87,8 @@ describe Spree::Calculator::Shipping do
   describe 'compute' do
     subject { calculator.compute(package) }
 
-    let(:rates) do
-      [double('rate', service_name: 'Bogus Calculator', price: 999)]
-    end
-
     it 'should use the carrier supplied in the initializer' do
-      expect(carrier).to receive(:find_rates) { response }
+      expect(calculator.carrier).to be_an_instance_of(carrier.class)
       subject
     end
 
@@ -130,29 +116,24 @@ describe Spree::Calculator::Shipping do
     end
 
     context 'with valid response' do
-      before do
-        allow(carrier).to receive(:find_rates) { response }
-      end
-
       it "should return rate based on calculator's service_name" do
-        allow(calculator.class).to receive(:description) { 'Bogus Calculator' }
         expect(subject).to eq 9.99
       end
 
       it 'should include handling_fee when configured' do
         Spree::ActiveShipping::Config.set(handling_fee: 100)
-        allow(calculator.class).to receive(:description) { 'Bogus Calculator' }
         expect(subject).to eq 10.99
       end
 
       it 'should return nil if service_name is not found in rate_hash' do
-        allow(calculator.class).to receive(:description) { 'Service name not found' }
+        allow(calculator.class).to receive(:description) {'invalid service_name'}
         expect(subject).to be_nil
       end
     end
 
     context 'with invalid response' do
       before do
+        allow(calculator).to receive(:carrier).and_return(carrier)
         allow(carrier).to receive(:find_rates).and_raise(::ActiveShipping::ResponseError)
       end
 
