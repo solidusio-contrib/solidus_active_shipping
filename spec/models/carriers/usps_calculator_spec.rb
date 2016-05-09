@@ -59,6 +59,17 @@ describe Spree::Calculator::Shipping::Usps do
         expect(subject).to be_nil
       end
     end
+
+    context 'with invalid response' do
+      before do
+        allow(calculator).to receive(:carrier).and_return(carrier)
+        allow(carrier).to receive(:find_rates).and_raise(::ActiveShipping::ResponseError)
+      end
+
+      it 'should raise a Spree::ShippingError' do
+        expect{ subject }.to raise_exception(Spree::ShippingError)
+      end
+    end
   end
 
   describe 'service_name' do

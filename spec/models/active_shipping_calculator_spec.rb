@@ -23,7 +23,7 @@ describe Spree::Calculator::Shipping do
     Spree::ActiveShipping::Config.set(units: 'imperial')
     Spree::ActiveShipping::Config.set(unit_multiplier: 1)
     Spree::ActiveShipping::Config.set(handling_fee: 0)
-    calculator.stub(:carrier).and_return(carrier)
+    allow(calculator).to receive(:carrier).and_return(carrier)
     # Since the response can be cached, we explicitly clear cache
     # so each test can be run from a clean slate
     Rails.cache.delete(calculator.send(:cache_key, package))
@@ -70,7 +70,7 @@ describe Spree::Calculator::Shipping do
 
     context 'when there is an error retrieving the rates' do
       before do
-        allow(carrier).to receive(:find_rates) { raise ActiveShipping::ResponseError }
+        allow(carrier).to receive(:find_rates).and_raise(::ActiveShipping::ResponseError)
       end
 
       it 'should return false' do
@@ -89,7 +89,7 @@ describe Spree::Calculator::Shipping do
       # if max_weight_for_country is nil -> the carrier does not ship to that country
       # if max_weight_for_country is 0 -> the carrier does not have weight restrictions to that country
       calculator.stub(:max_weight_for_country).and_return(nil)
-      expect(calculator).to receive(:is_package_shippable?) { raise Spree::ShippingError }
+      expect(calculator).to receive(:is_package_shippable?).and_raise(Spree::ShippingError)
       expect(calculator.available?(package)).to eq false
     end
   end
@@ -148,6 +148,16 @@ describe Spree::Calculator::Shipping do
       it 'should return nil if service_name is not found in rate_hash' do
         allow(calculator.class).to receive(:description) { 'Service name not found' }
         expect(subject).to be_nil
+      end
+    end
+
+    context 'with invalid response' do
+      before do
+        allow(carrier).to receive(:find_rates).and_raise(::ActiveShipping::ResponseError)
+      end
+
+      it 'should raise a Spree::ShippingError' do
+        expect{ subject }.to raise_exception(Spree::ShippingError)
       end
     end
   end

@@ -51,7 +51,6 @@ module Spree
             rate_hash = Hash[*rates.flatten]
             return rate_hash
           rescue ::ActiveShipping::Error => e
-
             if [::ActiveShipping::ResponseError].include?(e.class) && e.response.is_a?(::ActiveShipping::Response)
               params = e.response.params
               if params.has_key?("Response") && params["Response"].has_key?("Error") && params["Response"]["Error"].has_key?("ErrorDescription")
