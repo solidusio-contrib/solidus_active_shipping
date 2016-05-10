@@ -24,8 +24,8 @@ module ActiveShipping
     let(:variant2) { build(:variant, :weight => 5.25) }
     let(:variant3) { build(:variant, :weight => 29.0) }
     let(:variant4) { build(:variant, :weight => 100.0) }
-    let(:variant5) { build(:variant, :weight => 0) }
-    let(:variant6) { build(:variant, :weight => -1.0) }
+    let(:variant_zero_weight) { build(:variant, :weight => 0) }
+    let(:variant_negative_weight) { build(:variant, :weight => -1.0) }
     let(:variant7) do
       build(
         :variant,
@@ -52,6 +52,12 @@ module ActiveShipping
                     build_content_items(variant2, 4, ca_order),
                     build_content_items(variant3, 1, ca_order)].flatten) }
 
+    let(:small_package) { double(Spree::Stock::Package,
+          order: ca_order,
+          contents: [build_content_items(variant1, 1, ca_order),
+                    build_content_items(variant2, 2, ca_order),
+                    build_content_items(variant3, 1, ca_order)].flatten) }
+
     let(:too_heavy_package) do
       Spree::Stock::Package.extend ActiveModel::Naming
       mock_model(
@@ -71,15 +77,19 @@ module ActiveShipping
                     build_content_items(variant2, 4, ca_order),
                     build_content_items(variant3, 1, ca_order)].flatten) }
 
-    let(:package_with_invalid_weights) { double(Spree::Stock::Package,
+    let(:us_package_with_invalid_weights) { double(Spree::Stock::Package,
           order: us_order,
-          contents: [build_content_items(variant5, 1, us_order),
-                    build_content_items(variant6, 1, us_order)].flatten) }
+          contents: [build_content_items(variant_zero_weight, 1, us_order),
+                    build_content_items(variant_negative_weight, 1, us_order)].flatten) }
 
     let(:package_with_packages) { double(Spree::Stock::Package,
           order: us_order,
           contents: [build_content_items(variant8, 4, us_order),
                     build_content_items(variant7, 2, us_order)].flatten) }
+
+    let(:package_single_item) { double(Spree::Stock::Package,
+          order: ca_order,
+          contents: [build_content_items(variant1, 2, ca_order)].flatten) }
 
     let(:international_calculator) {  Spree::Calculator::Shipping::Usps::PriorityMailInternational.new }
     let(:domestic_calculator) {  Spree::Calculator::Shipping::Usps::PriorityMail.new }
@@ -89,6 +99,177 @@ module ActiveShipping
       Spree::ActiveShipping::Config.set(:units => "imperial")
       Spree::ActiveShipping::Config.set(:unit_multiplier => 16)
       Spree::ActiveShipping::Config.set(:default_weight => 1)
+    end
+
+    describe ".valid_weight_for_package?" do
+      context "with a non nil max weight" do
+        it "should return true if the max_weight is equal to zero" do
+          expect(domestic_calculator.send :valid_weight_for_package?, package, 0).to eq true
+        end
+
+        it "should return true if the package weight is equal to the supplied max_weight" do
+          allow(package).to receive(:weight).and_return(1)
+          expect(domestic_calculator.send :valid_weight_for_package?, package, 1).to eq true
+        end
+
+        it "should return true if the package weight is less than the supplied max_weight" do
+          allow(package).to receive(:weight).and_return(1)
+          expect(domestic_calculator.send :valid_weight_for_package?, package, 2).to eq true
+        end
+
+        it "should return false if the package weight is greater than the supplied max_weight" do
+          allow(package).to receive(:weight).and_return(3)
+          expect(domestic_calculator.send :valid_weight_for_package?, package, 2).to eq false
+        end
+      end
+
+      context "with a nil max weight" do
+        it "should return false if the max_weight is nil" do
+          expect(domestic_calculator.send :valid_weight_for_package?, package, nil).to eq false
+        end
+      end
+    end
+
+    describe ".country_weight_error?" do
+      context "with a package that is too heavy" do
+        it "should raise a Spree::ShippingError" do
+          allow(domestic_calculator).to receive(:valid_weight_for_package?).and_return(false)
+          expect{ domestic_calculator.send :country_weight_error?, package }.to raise_error(Spree::ShippingError)
+        end
+      end
+
+      context "with a package within the weights limit" do
+         it "should return false" do
+          allow(domestic_calculator).to receive(:valid_weight_for_package?).and_return(true)
+          expect(domestic_calculator.send :country_weight_error?, package).to be_nil
+        end
+      end
+    end
+
+    describe ".convert_package_to_weights_array" do
+      it "should use the unit_multiplier from Spree::ActiveShipping::Config" do
+        # Small package content is : 1 x Variant1, 1x Variant2, 1x Variant3
+        weights = international_calculator.send :convert_package_to_weights_array, small_package
+        active_shipping_weights = [variant1.weight, variant2.weight, variant2.weight, variant3.weight].map do |x|
+            (x * Spree::ActiveShipping::Config[:unit_multiplier]).to_d
+        end
+        expect(weights).to match_array active_shipping_weights
+      end
+
+      context "with a package containing variants with no weight" do
+        before do
+          # It's not set globally, therefore we set a value before those tests
+          Spree::ActiveShipping::Config.set(:max_weight_per_package => 30)
+        end
+
+        it "should use the default_weight from Spree::ActiveShipping" do
+          default_weight = Spree::ActiveShipping::Config[:default_weight]
+          weights = domestic_calculator.send :convert_package_to_weights_array, us_package_with_invalid_weights
+
+          active_shipping_weights = [default_weight, default_weight].map do |x|
+            (x * Spree::ActiveShipping::Config[:unit_multiplier]).to_d
+          end
+
+          expect(weights).to match_array active_shipping_weights
+        end
+      end
+
+      context "with a package containing variants with individual item weight less than or equal to the maximum per package weight" do
+        before do
+          # It's not set globally, therefore we set a value before those tests
+          Spree::ActiveShipping::Config.set(:max_weight_per_package => 100)
+        end
+
+        it "should return an array containing the expected weight values" do
+          weights = international_calculator.send :convert_package_to_weights_array, small_package
+          active_shipping_weights = [variant1.weight, variant2.weight, variant2.weight, variant3.weight].map do |x|
+            (x * Spree::ActiveShipping::Config[:unit_multiplier]).to_d
+          end
+          expect(weights).to match_array active_shipping_weights
+        end
+      end
+
+      context "with a package containing variants with an individual item weight higher than the maximum per package weight" do
+        before do
+          # It's not set globally, therefore we set a value before those tests
+          Spree::ActiveShipping::Config.set(:max_weight_per_package => 1)
+        end
+
+        it "should raise a Spree::ShippingError" do
+          expect{domestic_calculator.send :convert_package_to_weights_array, small_package }.to raise_error(Spree::ShippingError)
+        end
+      end
+
+      context "with a package containing variants where total weight (item weight * quantity) is higher than the maximum per package weight" do
+        before do
+          # It's not set globally, therefore we set a value before those tests
+          Spree::ActiveShipping::Config[:unit_multiplier] = 1
+          Spree::ActiveShipping::Config.set(:max_weight_per_package => 30)
+        end
+
+        # Individual weight is 20 so with a max weight of 30 per package, we can ship one but not two
+        # in the same package
+
+        # TO DO Compare Array instead with repeating records
+        it "should return an array with a value for each individual item (1 product x 2 counts as two separate items)" do
+          weights = domestic_calculator.send :convert_package_to_weights_array, package_single_item
+          active_shipping_weights = [variant1.weight, variant1.weight].map do |x|
+            (x * Spree::ActiveShipping::Config[:unit_multiplier]).to_d
+          end
+          expect(weights).to match_array active_shipping_weights
+        end
+      end
+
+      context "with a package containing variants where total weight (item weight * quantity) is less than or equal to the maximum per package weight" do
+        before do
+          # It's not set globally, therefore we set a value before those tests
+          Spree::ActiveShipping::Config[:unit_multiplier] = 1
+          Spree::ActiveShipping::Config.set(:max_weight_per_package => 30)
+        end
+
+        # Packages are made of ContentItem who does not track quantity (hardcoded value of 1) so
+        # this means that if you have a LineItem with a quantity of 2, you will have 2 ContentItem
+        # instead of one ContentItem with a quantity of 2, so this feature does not work at the moment
+
+        # TO DO Compare Array instead with repeating records
+        it "should return an array with a value for each individual item (1 product x 2 counts as two separate items)" do
+          weights = domestic_calculator.send :convert_package_to_weights_array, package_single_item
+          active_shipping_weights = [variant1.weight, variant1.weight].map do |x|
+            (x * Spree::ActiveShipping::Config[:unit_multiplier]).to_d
+          end
+          expect(weights).to match_array active_shipping_weights
+        end
+      end
+    end
+
+    describe ".get_max_weight" do
+      context "when .max_weight_for_country is returning a nil value" do
+        # This can happen when individual calculators override the method and fails
+        # for various reason (like USPS / Priority mail international will return nil when
+        # using a country that is not in the WEIGHT_LIMIT array and .get_max_weight will crash
+        # and return undefined method `>' for nil:NilClass
+        it "should return an error" do
+          allow(domestic_calculator).to receive(:max_weight_for_country).and_return(nil)
+          expect{domestic_calculator.send :get_max_weight, package}.to raise_error(NoMethodError, "undefined method `>' for nil:NilClass")
+        end
+      end
+    end
+
+    describe ".fetch_best_state_from_address" do
+      let(:qc) { FactoryGirl.create(:state, country: country, abbr: 'QC', name: 'Quebec (state_model)')}
+      let(:state_and_state_name) { build(:address, :country => country, :state_name => "Quebec (state_name)", :city => "Montreal", :zipcode => "H2B", :state => qc) }
+
+      subject { domestic_calculator.send :fetch_best_state_from_address, state_and_state_name }
+
+      context "with an address having an associated state" do
+        it "returns the abbr through the Spree::State model (address.state.abbr)" do         
+           expect(subject).to eq "QC"
+        end
+
+        it "does not return the state_name from the Spree::Adress model (address.state_name)" do
+          expect(subject).not_to eq "Quebec (state_name)"
+        end
+      end
     end
 
     describe "compute" do
@@ -153,7 +334,7 @@ module ActiveShipping
 
     describe "validation of line item weight" do
       it "should avoid zero weight or negative weight" do
-        weights = domestic_calculator.send :convert_package_to_weights_array, package_with_invalid_weights
+        weights = domestic_calculator.send :convert_package_to_weights_array, us_package_with_invalid_weights
         default_weight = Spree::ActiveShipping::Config[:default_weight] * Spree::ActiveShipping::Config[:unit_multiplier]
         expect(weights).to eq([default_weight, default_weight])
       end
@@ -162,7 +343,7 @@ module ActiveShipping
     describe "validation of default weight of zero" do
       it "should accept zero default weight" do
         Spree::ActiveShipping::Config.set(:default_weight => 0)
-        weights = domestic_calculator.send :convert_package_to_weights_array, package_with_invalid_weights
+        weights = domestic_calculator.send :convert_package_to_weights_array, us_package_with_invalid_weights
         expect(weights).to eq([0, 0])
       end
     end
