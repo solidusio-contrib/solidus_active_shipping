@@ -6,8 +6,8 @@ describe Spree::Admin::ActiveShippingSettingsController do
   context '#edit' do
     it 'should assign a Spree::ActiveShippingConfiguration and render the view' do
       spree_get :edit
-      assigns(:config).should be_an_instance_of(Spree::ActiveShippingConfiguration)
-      response.should render_template('edit')
+      expect(assigns(:config)).to be_an_instance_of(Spree::ActiveShippingConfiguration)
+      expect(response).to render_template('edit')
     end
   end
 
@@ -31,7 +31,7 @@ describe Spree::Admin::ActiveShippingSettingsController do
     context 'without existing value' do
       it "doesn't produce an error" do
         spree_post :update, 'not_real_parameter_name' => 'not_real'
-        response.should redirect_to(spree.edit_admin_active_shipping_settings_path)
+        expect(response).to redirect_to(spree.edit_admin_active_shipping_settings_path)
       end
     end
   end
