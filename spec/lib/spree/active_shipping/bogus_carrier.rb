@@ -8,7 +8,7 @@ module Spree
       end
 
       def find_rates(origin, destination, packages, options = {})
-        RateResponse.new(true, "Bogus rate response.")
+        RateResponse.new(true, "Bogus response")
       end
     end
   end
