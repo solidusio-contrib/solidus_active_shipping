@@ -13,8 +13,9 @@ shared_context 'package setup' do
   let(:variant_2) { FactoryGirl.create(:variant, weight: 2) }
   let(:order) do
     FactoryGirl.create(
-      :order_with_line_items,
+      :order_with_line_items_and_stock_location,
       stock_location: stock_location,
+      bill_address: destination,
       ship_address: destination,
       line_items_count: 2,
       line_items_attributes: [
