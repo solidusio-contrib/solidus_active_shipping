@@ -51,7 +51,7 @@ describe Spree::Calculator::Shipping do
       end
 
       it 'should use zero as a valid weight for service' do
-        calculator.stub(:max_weight_for_country).and_return(0)
+        allow(calculator).to receive(:max_weight_for_country).and_return(0)
         expect(calculator.available?(package)).to eq true
       end
     end
@@ -88,7 +88,7 @@ describe Spree::Calculator::Shipping do
     it 'should not return rates if the weight requirements for the destination country are not met' do
       # if max_weight_for_country is nil -> the carrier does not ship to that country
       # if max_weight_for_country is 0 -> the carrier does not have weight restrictions to that country
-      calculator.stub(:max_weight_for_country).and_return(nil)
+      allow(calculator).to receive(:max_weight_for_country).and_return(nil)
       expect(calculator).to receive(:is_package_shippable?).and_raise(Spree::ShippingError)
       expect(calculator.available?(package)).to eq false
     end
@@ -116,7 +116,7 @@ describe Spree::Calculator::Shipping do
 
     xit 'should create a package with the correct total weight in ounces' do
       # (10 * 2 + 5.25 * 1) * 16 = 404
-      Package.should_receive(:new).with(404, [], units: :imperial)
+      expect(Package).to receive(:new).with(404, [], units: :imperial)
       subject
     end
 
