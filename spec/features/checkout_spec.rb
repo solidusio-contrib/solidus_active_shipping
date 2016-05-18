@@ -6,6 +6,12 @@ describe "Checkout", type: :feature do
 
   include_context 'UPS setup'
 
+  around do |example|
+    WebMock.allow_net_connect!
+    example.run
+    WebMock.disable_net_connect!
+  end
+
   context "with valid shipping address" do
     let!(:valid_address) { create :address,
       firstname: 'John',
