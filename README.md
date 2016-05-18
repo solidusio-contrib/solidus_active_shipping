@@ -3,6 +3,8 @@ Active Shipping
 
 This is a Solidus extension that wraps the popular [active_shipping](http://github.com/Shopify/active_shipping/tree/master) plugin.
 
+**NOTE : This is an old and complex extension we are working on bringing up to our standards. Use with caution**
+
 [![Build Status](https://travis-ci.org/solidusio-contrib/solidus_active_shipping.svg?branch=master)](https://travis-ci.org/solidusio-contrib/solidus_active_shipping)
 
 Installation
