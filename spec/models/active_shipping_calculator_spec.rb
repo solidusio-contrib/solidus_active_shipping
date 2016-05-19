@@ -22,9 +22,6 @@ describe Spree::Calculator::Shipping do
     Spree::ActiveShipping::Config.set(units: 'imperial')
     Spree::ActiveShipping::Config.set(unit_multiplier: 1)
     Spree::ActiveShipping::Config.set(handling_fee: 0)
-    # Since the response can be cached, we explicitly clear cache
-    # so each test can be run from a clean slate
-    Rails.cache.delete(calculator.send(:cache_key, package))
   end
 
   describe 'package.order' do
@@ -106,13 +103,41 @@ describe Spree::Calculator::Shipping do
       subject
     end
 
-    it 'should check the cache first before finding rates' do
-      # Since the cache is cleared between the tests, cache.fetch will return a miss,
-      # but by passing a block { Hash.new }, the return value of the block will be
-      # written under the given cache key
-      Rails.cache.fetch(calculator.send(:cache_key, package)) { Hash.new }
-      expect(carrier).not_to receive(:find_rates)
-      subject
+    context "when the cache is warm" do
+      before do
+        # We're stubbing the carrier method because we
+        # need to check that a specific instance of carrier
+        # is receiving or not the function call (otherwise test will
+        # pass but only because carrier we're watching and the carrier
+        # used by the calculator are different)
+        allow(calculator).to receive(:carrier).and_return(carrier)
+      end
+
+      it 'should check the cache first before finding rates' do
+        # Since the cache is cleared between the tests, cache.fetch will return a miss,
+        # but by passing a block { Hash.new }, the return value of the block will be
+        # written under the given cache key so we simulate a warm cache
+        Rails.cache.fetch(calculator.send(:cache_key, package)) { Hash.new }
+        expect(carrier).not_to receive(:find_rates)
+        subject
+      end
+    end
+
+    context "when the cache is empty" do
+      before do
+        # We're stubbing the carrier method because we
+        # need to check that a specific instance of carrier
+        # is receiving or not the function call (otherwise test will
+        # pass but only because carrier we're watching and the carrier
+        # used by the calculator are different)
+        allow(calculator).to receive(:carrier).and_return(carrier)
+        allow(carrier).to receive(:find_rates).and_call_original
+      end
+
+      it 'should call .find_rates' do
+        expect(carrier).to receive(:find_rates)
+        subject
+      end
     end
 
     context 'with valid response' do
