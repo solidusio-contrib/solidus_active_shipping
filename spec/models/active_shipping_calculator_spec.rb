@@ -83,12 +83,7 @@ describe Spree::Calculator::Shipping do
 
   describe 'compute' do
     subject { calculator.compute(package) }
-
-    it 'should use the carrier supplied in the initializer' do
-      expect(calculator.carrier).to be_an_instance_of(carrier.class)
-      subject
-    end
-
+    
     # It's passing but probably because it's not checking anything
     xit 'should ignore variants that have a nil weight' do
       variant = order.line_items.first.variant
