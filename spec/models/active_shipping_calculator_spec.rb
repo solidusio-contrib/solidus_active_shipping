@@ -13,7 +13,6 @@ describe Spree::Calculator::Shipping do
                        line_items_attributes: [{ quantity: 2, variant: variant_1}, { quantity: 2, variant: variant_2 }] )
   end
 
-  let(:carrier) { Spree::ActiveShipping::BogusCarrier.new }
   let(:calculator) { Spree::Calculator::Shipping::ActiveShipping::BogusCalculator.new }
   let(:package) { order.shipments.first.to_package }
 
@@ -38,7 +37,7 @@ describe Spree::Calculator::Shipping do
       end
 
       it 'should use zero as a valid weight for service' do
-        allow(calculator).to receive(:max_weight_for_country).and_return(0)
+        allow(calculator.carrier).to receive(:max_weight_for_country).and_return(0)
         expect(calculator.available?(package)).to eq true
       end
     end
@@ -49,8 +48,7 @@ describe Spree::Calculator::Shipping do
       end
 
       before do
-        allow(calculator).to receive(:carrier).and_return(carrier)
-        allow(carrier).to receive(:find_rates).and_return(invalid_response)
+        allow(calculator.carrier).to receive(:find_rates).and_return(invalid_response)
       end
 
       it 'should return false' do
@@ -60,8 +58,7 @@ describe Spree::Calculator::Shipping do
 
     context 'when there is an error retrieving the rates' do
       before do
-        allow(calculator).to receive(:carrier).and_return(carrier)
-        allow(carrier).to receive(:find_rates).and_raise(::ActiveShipping::ResponseError)
+        allow(calculator.carrier).to receive(:find_rates).and_raise(::ActiveShipping::ResponseError)
       end
 
       it 'should return false' do
@@ -99,21 +96,13 @@ describe Spree::Calculator::Shipping do
     end
 
     context "when the cache is warm" do
-      before do
-        # We're stubbing the carrier method because we
-        # need to check that a specific instance of carrier
-        # is receiving or not the function call (otherwise test will
-        # pass but only because carrier we're watching and the carrier
-        # used by the calculator are different)
-        allow(calculator).to receive(:carrier).and_return(carrier)
-      end
 
       it 'should check the cache first before finding rates' do
         # Since the cache is cleared between the tests, cache.fetch will return a miss,
         # but by passing a block { Hash.new }, the return value of the block will be
         # written under the given cache key so we simulate a warm cache
         Rails.cache.fetch(calculator.send(:cache_key, package)) { Hash.new }
-        expect(carrier).not_to receive(:find_rates)
+        expect(calculator.carrier).not_to receive(:find_rates)
         subject
       end
     end
@@ -125,12 +114,11 @@ describe Spree::Calculator::Shipping do
         # is receiving or not the function call (otherwise test will
         # pass but only because carrier we're watching and the carrier
         # used by the calculator are different)
-        allow(calculator).to receive(:carrier).and_return(carrier)
-        allow(carrier).to receive(:find_rates).and_call_original
+        allow(calculator.carrier).to receive(:find_rates).and_call_original
       end
 
       it 'should call .find_rates' do
-        expect(carrier).to receive(:find_rates)
+        expect(calculator.carrier).to receive(:find_rates)
         subject
       end
     end
@@ -153,8 +141,7 @@ describe Spree::Calculator::Shipping do
 
     context 'with invalid response' do
       before do
-        allow(calculator).to receive(:carrier).and_return(carrier)
-        allow(carrier).to receive(:find_rates).and_raise(::ActiveShipping::ResponseError)
+        allow(calculator.carrier).to receive(:find_rates).and_raise(::ActiveShipping::ResponseError)
       end
 
       it 'should raise a Spree::ShippingError' do
