@@ -15,11 +15,26 @@ module Spree
         packages(package)
       end
 
+      # Configuration 
+      def units
+        Spree::ActiveShipping::Config[:units].to_sym
+      end
+
+      def multiplier
+        Spree::ActiveShipping::Config[:unit_multiplier]
+      end
+
+      def default_weight
+        Spree::ActiveShipping::Config[:default_weight]
+      end
+
+      def max_weight_per_package
+        Spree::ActiveShipping::Config[:max_weight_per_package] * multiplier
+      end
+
       private
 
       def convert_package_to_weights_array(package)
-        multiplier = Spree::ActiveShipping::Config[:unit_multiplier]
-        default_weight = Spree::ActiveShipping::Config[:default_weight]
         max_weight = get_max_weight(package)
 
         weights = package.contents.map do |content_item|
@@ -55,7 +70,6 @@ module Spree
       end
 
       def convert_package_to_item_packages_array(package)
-        multiplier = Spree::ActiveShipping::Config[:unit_multiplier]
         max_weight = get_max_weight(package)
         packages = []
 
@@ -88,7 +102,6 @@ module Spree
 
       # Generates an array of Package objects based on the quantities and weights of the variants in the line items
       def packages(package)
-        units = Spree::ActiveShipping::Config[:units].to_sym
         packages = []
         weights = convert_package_to_weights_array(package)
         max_weight = get_max_weight(package)
@@ -120,7 +133,6 @@ module Spree
       def get_max_weight(package)
         order = package.order
         max_weight = max_weight_for_country(order.ship_address.country)
-        max_weight_per_package = Spree::ActiveShipping::Config[:max_weight_per_package] * Spree::ActiveShipping::Config[:unit_multiplier]
         if max_weight == 0 && max_weight_per_package > 0
           max_weight = max_weight_per_package
         elsif max_weight > 0 && max_weight_per_package < max_weight && max_weight_per_package > 0

@@ -29,6 +29,22 @@ describe Spree::Calculator::Weight do
                       build_content_items(product_with_packages, 4, order)].flatten)
   end
 
+  it "has a a unit_multiplier value" do
+    expect(package_builder.multiplier).not_to be_nil
+  end
+
+  it "has a a units value" do
+    expect(package_builder.units).not_to be_nil
+  end
+
+  it "has a a default_weight value" do
+    expect(package_builder.default_weight).not_to be_nil
+  end
+
+  it "has a a max_weight_per_package value" do
+    expect(package_builder.max_weight_per_package).not_to be_nil
+  end
+  
   describe 'process' do
     let(:legacy_package) { shipping_calculator.send :packages, package }
 
