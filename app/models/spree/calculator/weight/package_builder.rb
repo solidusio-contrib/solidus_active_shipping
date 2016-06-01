@@ -4,6 +4,7 @@ module Spree
       extend Forwardable
 
       attr_reader :shipping_calculator
+      attr_accessor :max_weight
 
       def_instance_delegator :shipping_calculator, :max_weight_for_country
 
@@ -12,6 +13,9 @@ module Spree
       end
 
       def process(package)
+        # We compute and set the max_weight once, at the beginning of the process
+        @max_weight = get_max_weight(package)
+
         packages(package)
       end
 
@@ -35,8 +39,6 @@ module Spree
       private
 
       def convert_package_to_weights_array(package)
-        max_weight = get_max_weight(package)
-
         weights = package.contents.map do |content_item|
           item_weight = content_item.variant.weight.to_f
           item_weight = default_weight if item_weight <= 0
@@ -69,8 +71,15 @@ module Spree
         weights.flatten.compact.sort
       end
 
+      # Used for calculating Dimensional Weight pricing.
+      # Override in your own extensions to compute package dimensions,
+      # or just leave this alone to keep the default behavior.
+      # Sample output: [9, 6, 3]
+      def convert_package_to_dimensions_array(_package)
+        []
+      end
+
       def convert_package_to_item_packages_array(package)
-        max_weight = get_max_weight(package)
         packages = []
 
         package.contents.each do |content_item|
@@ -92,19 +101,10 @@ module Spree
         packages
       end
 
-      # Used for calculating Dimensional Weight pricing.
-      # Override in your own extensions to compute package dimensions,
-      # or just leave this alone to keep the default behavior.
-      # Sample output: [9, 6, 3]
-      def convert_package_to_dimensions_array(_package)
-        []
-      end
-
       # Generates an array of Package objects based on the quantities and weights of the variants in the line items
       def packages(package)
         packages = []
         weights = convert_package_to_weights_array(package)
-        max_weight = get_max_weight(package)
         dimensions = convert_package_to_dimensions_array(package)
         item_specific_packages = convert_package_to_item_packages_array(package)
 
@@ -132,11 +132,17 @@ module Spree
 
       def get_max_weight(package)
         order = package.order
-        max_weight = max_weight_for_country(order.ship_address.country)
-        if max_weight == 0 && max_weight_per_package > 0
-          max_weight = max_weight_per_package
+        order_ship_address_country = order.ship_address.country
+
+        # Default value from calculator
+        max_weight = max_weight_for_country(order_ship_address_country)
+
+        # If max_weight is zero or max_weight_per_package is less than max_weight
+        # We use the max_weight_per_package instead
+        if max_weight.zero? && max_weight_per_package.nonzero?
+          return max_weight_per_package
         elsif max_weight > 0 && max_weight_per_package < max_weight && max_weight_per_package > 0
-          max_weight = max_weight_per_package
+          return max_weight_per_package
         end
 
         max_weight
