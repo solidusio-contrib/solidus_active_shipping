@@ -2,14 +2,7 @@ require 'spec_helper'
 
 module ActiveShipping
   describe Spree::ShippingCalculator do
-
-    def build_content_items(variant, quantity, order)
-      quantity.times.map {|i| Spree::Stock::ContentItem.new(build_inventory_unit(variant, order)) }
-    end
-
-    def build_inventory_unit(variant, order)
-      build(:inventory_unit, variant: variant, order: order)
-    end
+    include PackageHelper
 
     let(:country) { build(:country, :iso => "CA") }
     let(:address) { build(:address, :country => country, :state_name => "Quebec", :city => "Montreal", :zipcode => "H2B", :state => nil) }
