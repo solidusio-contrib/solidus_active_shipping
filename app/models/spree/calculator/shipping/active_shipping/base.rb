@@ -73,6 +73,11 @@ module Spree
         end
 
         private
+
+        def package_builder
+          Spree::Calculator::Weight::PackageBuilder.new(self)
+        end
+
         # check for known limitations inside a package
         # that will limit you from shipping using a service
         def is_package_shippable? package
@@ -285,7 +290,8 @@ module Spree
 
         def retrieve_rates_from_cache package, origin, destination
           Rails.cache.fetch(cache_key(package)) do
-            shipment_packages = packages(package)
+            shipment_packages = package_builder.process(package)
+            #shipment_packages = packages(package)
             if shipment_packages.empty?
               {}
             else
