@@ -1,14 +1,8 @@
 require 'spec_helper'
 
 describe Spree::Calculator::Weight do
-  def build_content_items(variant, quantity, order)
-    Array.new(quantity) { |_i| Spree::Stock::ContentItem.new(build_inventory_unit(variant, order)) }
-  end
-
-  def build_inventory_unit(variant, order)
-    build(:inventory_unit, variant: variant, order: order)
-  end
-
+  include PackageHelper
+  
   let(:address) { FactoryGirl.create(:address) }
   let(:order) { build(:order, ship_address: address) }
 
