@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe Spree::Calculator::Weight do
+describe Spree::PackageBuilder do
   include PackageHelper
   
   let(:address) { FactoryGirl.create(:address) }
   let(:order) { build(:order, ship_address: address) }
 
   let(:shipping_calculator) { Spree::Calculator::Shipping::ActiveShipping::BogusCalculator.new }
-  let(:package_builder) { Spree::Calculator::Weight::PackageBuilder.new(shipping_calculator) }
+  let(:package_builder) { Spree::PackageBuilder.new(shipping_calculator) }
 
   let(:product_package) { mock_model(Spree::ProductPackage, length: 12, width: 24, height: 47, weight: 36) }
 

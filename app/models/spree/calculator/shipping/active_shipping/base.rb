@@ -75,7 +75,7 @@ module Spree
         private
 
         def package_builder
-          Spree::Calculator::Weight::PackageBuilder.new(self)
+          Spree::PackageBuilder.new(self)
         end
 
         # check for known limitations inside a package
