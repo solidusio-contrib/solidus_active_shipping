@@ -26,5 +26,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'database_cleaner', '~> 1.2'
   s.add_development_dependency 'capybara', '~> 2.7'
   s.add_development_dependency 'poltergeist', '~> 1.9'
+  s.add_development_dependency 'vcr'
   s.add_dependency 'carmen', '~> 1.0.0'
 end

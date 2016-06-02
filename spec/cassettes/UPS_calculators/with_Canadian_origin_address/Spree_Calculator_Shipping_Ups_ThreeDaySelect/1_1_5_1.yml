@@ -1,0 +1,103 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://wwwcie.ups.com/ups.app/xml/Rate
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <AccessRequest>
+          <AccessLicenseNumber>9D0B1B1E0A6389A8</AccessLicenseNumber>
+          <UserId>solidusdev</UserId>
+          <Password>S0lidusdev</Password>
+        </AccessRequest>
+        <?xml version="1.0"?>
+        <RatingServiceSelectionRequest>
+          <Request>
+            <RequestAction>Rate</RequestAction>
+            <RequestOption>Shop</RequestOption>
+          </Request>
+          <PickupType>
+            <Code>01</Code>
+          </PickupType>
+          <CustomerClassification>
+            <Code>01</Code>
+          </CustomerClassification>
+          <Shipment>
+            <Shipper>
+              <Address>
+                <City>Ottawa</City>
+                <StateProvinceCode>ON</StateProvinceCode>
+                <PostalCode>K1P1J1</PostalCode>
+                <CountryCode>CA</CountryCode>
+                <ResidentialAddressIndicator>true</ResidentialAddressIndicator>
+              </Address>
+            </Shipper>
+            <ShipTo>
+              <Address>
+                <City>Chicago</City>
+                <StateProvinceCode>IL</StateProvinceCode>
+                <PostalCode>60601</PostalCode>
+                <CountryCode>US</CountryCode>
+                <ResidentialAddressIndicator>true</ResidentialAddressIndicator>
+              </Address>
+            </ShipTo>
+            <Package>
+              <PackagingType>
+                <Code>02</Code>
+              </PackagingType>
+              <Dimensions>
+                <UnitOfMeasurement>
+                  <Code>CM</Code>
+                </UnitOfMeasurement>
+                <Length>0.1</Length>
+                <Width>0.1</Width>
+                <Height>0.1</Height>
+              </Dimensions>
+              <PackageWeight>
+                <UnitOfMeasurement>
+                  <Code>KGS</Code>
+                </UnitOfMeasurement>
+                <Weight>2.722</Weight>
+              </PackageWeight>
+              <PackageServiceOptions/>
+            </Package>
+          </Shipment>
+        </RatingServiceSelectionRequest>
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 02 Jun 2016 03:58:11 GMT
+      Server:
+      - Apache
+      X-Frame-Options:
+      - SAMEORIGIN
+      Pragma:
+      - no-cache
+      Content-Length:
+      - '6364'
+      X-Content-Type-Options:
+      - nosniff
+      Content-Type:
+      - application/xml
+    body:
+      encoding: UTF-8
+      string: |-
+        <?xml version="1.0"?>
+        <RatingServiceSelectionResponse><Response><ResponseStatusCode>1</ResponseStatusCode><ResponseStatusDescription>Success</ResponseStatusDescription></Response><RatedShipment><Service><Code>07</Code></Service><RatedShipmentWarning>Your invoice may vary from the displayed reference rates</RatedShipmentWarning><BillingWeight><UnitOfMeasurement><Code>KGS</Code></UnitOfMeasurement><Weight>3.0</Weight></BillingWeight><TransportationCharges><CurrencyCode>CAD</CurrencyCode><MonetaryValue>139.10</MonetaryValue></TransportationCharges><ServiceOptionsCharges><CurrencyCode>CAD</CurrencyCode><MonetaryValue>0.00</MonetaryValue></ServiceOptionsCharges><TotalCharges><CurrencyCode>CAD</CurrencyCode><MonetaryValue>139.10</MonetaryValue></TotalCharges><GuaranteedDaysToDelivery>1</GuaranteedDaysToDelivery><ScheduledDeliveryTime>10:30 A.M.</ScheduledDeliveryTime><RatedPackage><TransportationCharges><CurrencyCode/><MonetaryValue/></TransportationCharges><ServiceOptionsCharges><CurrencyCode/><MonetaryValue/></ServiceOptionsCharges><TotalCharges><CurrencyCode/><MonetaryValue/></TotalCharges><Weight>2.8</Weight><BillingWeight><UnitOfMeasurement><Code/></UnitOfMeasurement><Weight/></BillingWeight></RatedPackage></RatedShipment><RatedShipment><Service><Code>08</Code></Service><RatedShipmentWarning>Your invoice may vary from the displayed reference rates</RatedShipmentWarning><BillingWeight><UnitOfMeasurement><Code>KGS</Code></UnitOfMeasurement><Weight>3.0</Weight></BillingWeight><TransportationCharges><CurrencyCode>CAD</CurrencyCode><MonetaryValue>97.15</MonetaryValue></TransportationCharges><ServiceOptionsCharges><CurrencyCode>CAD</CurrencyCode><MonetaryValue>0.00</MonetaryValue></ServiceOptionsCharges><TotalCharges><CurrencyCode>CAD</CurrencyCode><MonetaryValue>97.15</MonetaryValue></TotalCharges><GuaranteedDaysToDelivery/><ScheduledDeliveryTime/><RatedPackage><TransportationCharges><CurrencyCode/><MonetaryValue/></TransportationCharges><ServiceOptionsCharges><CurrencyCode/><MonetaryValue/></ServiceOptionsCharges><TotalCharges><CurrencyCode/><MonetaryValue/></TotalCharges><Weight>2.8</Weight><BillingWeight><UnitOfMeasurement><Code/></UnitOfMeasurement><Weight/></BillingWeight></RatedPackage></RatedShipment><RatedShipment><Service><Code>54</Code></Service><RatedShipmentWarning>Your invoice may vary from the displayed reference rates</RatedShipmentWarning><BillingWeight><UnitOfMeasurement><Code>KGS</Code></UnitOfMeasurement><Weight>3.0</Weight></BillingWeight><TransportationCharges><CurrencyCode>CAD</CurrencyCode><MonetaryValue>223.30</MonetaryValue></TransportationCharges><ServiceOptionsCharges><CurrencyCode>CAD</CurrencyCode><MonetaryValue>0.00</MonetaryValue></ServiceOptionsCharges><TotalCharges><CurrencyCode>CAD</CurrencyCode><MonetaryValue>223.30</MonetaryValue></TotalCharges><GuaranteedDaysToDelivery>1</GuaranteedDaysToDelivery><ScheduledDeliveryTime>8:00 A.M.</ScheduledDeliveryTime><RatedPackage><TransportationCharges><CurrencyCode/><MonetaryValue/></TransportationCharges><ServiceOptionsCharges><CurrencyCode/><MonetaryValue/></ServiceOptionsCharges><TotalCharges><CurrencyCode/><MonetaryValue/></TotalCharges><Weight>2.8</Weight><BillingWeight><UnitOfMeasurement><Code/></UnitOfMeasurement><Weight/></BillingWeight></RatedPackage></RatedShipment><RatedShipment><Service><Code>65</Code></Service><RatedShipmentWarning>Your invoice may vary from the displayed reference rates</RatedShipmentWarning><BillingWeight><UnitOfMeasurement><Code>KGS</Code></UnitOfMeasurement><Weight>3.0</Weight></BillingWeight><TransportationCharges><CurrencyCode>CAD</CurrencyCode><MonetaryValue>132.25</MonetaryValue></TransportationCharges><ServiceOptionsCharges><CurrencyCode>CAD</CurrencyCode><MonetaryValue>0.00</MonetaryValue></ServiceOptionsCharges><TotalCharges><CurrencyCode>CAD</CurrencyCode><MonetaryValue>132.25</MonetaryValue></TotalCharges><GuaranteedDaysToDelivery>1</GuaranteedDaysToDelivery><ScheduledDeliveryTime/><RatedPackage><TransportationCharges><CurrencyCode/><MonetaryValue/></TransportationCharges><ServiceOptionsCharges><CurrencyCode/><MonetaryValue/></ServiceOptionsCharges><TotalCharges><CurrencyCode/><MonetaryValue/></TotalCharges><Weight>2.8</Weight><BillingWeight><UnitOfMeasurement><Code/></UnitOfMeasurement><Weight/></BillingWeight></RatedPackage></RatedShipment><RatedShipment><Service><Code>11</Code></Service><RatedShipmentWarning>Your invoice may vary from the displayed reference rates</RatedShipmentWarning><BillingWeight><UnitOfMeasurement><Code>KGS</Code></UnitOfMeasurement><Weight>3.0</Weight></BillingWeight><TransportationCharges><CurrencyCode>CAD</CurrencyCode><MonetaryValue>35.34</MonetaryValue></TransportationCharges><ServiceOptionsCharges><CurrencyCode>CAD</CurrencyCode><MonetaryValue>0.00</MonetaryValue></ServiceOptionsCharges><TotalCharges><CurrencyCode>CAD</CurrencyCode><MonetaryValue>35.34</MonetaryValue></TotalCharges><GuaranteedDaysToDelivery/><ScheduledDeliveryTime/><RatedPackage><TransportationCharges><CurrencyCode/><MonetaryValue/></TransportationCharges><ServiceOptionsCharges><CurrencyCode/><MonetaryValue/></ServiceOptionsCharges><TotalCharges><CurrencyCode/><MonetaryValue/></TotalCharges><Weight>2.8</Weight><BillingWeight><UnitOfMeasurement><Code/></UnitOfMeasurement><Weight/></BillingWeight></RatedPackage></RatedShipment><RatedShipment><Service><Code>12</Code></Service><RatedShipmentWarning>Your invoice may vary from the displayed reference rates</RatedShipmentWarning><BillingWeight><UnitOfMeasurement><Code>KGS</Code></UnitOfMeasurement><Weight>3.0</Weight></BillingWeight><TransportationCharges><CurrencyCode>CAD</CurrencyCode><MonetaryValue>89.70</MonetaryValue></TransportationCharges><ServiceOptionsCharges><CurrencyCode>CAD</CurrencyCode><MonetaryValue>0.00</MonetaryValue></ServiceOptionsCharges><TotalCharges><CurrencyCode>CAD</CurrencyCode><MonetaryValue>89.70</MonetaryValue></TotalCharges><GuaranteedDaysToDelivery/><ScheduledDeliveryTime/><RatedPackage><TransportationCharges><CurrencyCode/><MonetaryValue/></TransportationCharges><ServiceOptionsCharges><CurrencyCode/><MonetaryValue/></ServiceOptionsCharges><TotalCharges><CurrencyCode/><MonetaryValue/></TotalCharges><Weight>2.8</Weight><BillingWeight><UnitOfMeasurement><Code/></UnitOfMeasurement><Weight/></BillingWeight></RatedPackage></RatedShipment></RatingServiceSelectionResponse>
+    http_version: 
+  recorded_at: Thu, 02 Jun 2016 03:58:12 GMT
+recorded_with: VCR 3.0.3
