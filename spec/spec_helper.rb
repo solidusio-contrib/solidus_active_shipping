@@ -29,6 +29,7 @@ Dir[File.join(File.dirname(__FILE__), "factories/*.rb")].each {|f| require f }
 require 'rspec/active_model/mocks'
 
 VCR.configure do |config|
+  config.ignore_localhost = true
   config.cassette_library_dir = 'spec/cassettes'
   config.hook_into :webmock
   config.configure_rspec_metadata!
