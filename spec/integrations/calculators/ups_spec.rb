@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'UPS calculators' do
+describe 'UPS calculators', :vcr do
   include_context 'UPS setup'
   include_context 'package setup'
 
