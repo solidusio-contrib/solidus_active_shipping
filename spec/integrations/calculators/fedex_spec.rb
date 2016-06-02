@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'FedEx calculators' do
+describe 'FedEx calculators', :vcr do
   include_context 'FedEx setup'
   include_context 'package setup'
 
@@ -10,7 +10,7 @@ describe 'FedEx calculators' do
     include_context 'Canada stock location'
 
     describe Spree::Calculator::Shipping::Fedex::Ground do
-      it { is_expected.to eq(29.10) }
+      it { is_expected.to eq(28.9) }
     end
 
     describe Spree::Calculator::Shipping::Fedex::InternationalEconomy do
@@ -50,7 +50,7 @@ describe 'FedEx calculators' do
     end
 
     describe Spree::Calculator::Shipping::Fedex::GroundHomeDelivery do
-      it { is_expected.to eq(14.10) }
+      it { is_expected.to eq(14.0) }
     end
   end
 end
