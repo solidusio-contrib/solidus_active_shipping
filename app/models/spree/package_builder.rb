@@ -15,7 +15,7 @@ module Spree
       # We compute and set the max_weight once, at the beginning of the process
       @max_weight = get_max_weight(solidus_package)
 
-      packages(solidus_package)
+      to_packages(solidus_package)
     end
 
     # Configuration 
@@ -37,8 +37,8 @@ module Spree
 
     private
 
-    def convert_package_to_weights_array(solidus_package)
-      weights = solidus_package.contents.map do |content_item|
+    def convert_package_to_weights_array(ci_with_boxes)
+      weights = ci_with_boxes.map do |content_item|
         item_weight = content_item.weight
         item_weight = default_weight if item_weight <= 0
         item_weight *= multiplier
@@ -61,10 +61,10 @@ module Spree
       []
     end
 
-    def convert_package_to_item_packages_array(solidus_package)
+    def convert_package_to_item_packages_array(ci_without_boxes)
       packages = []
 
-      solidus_package.contents.each do |content_item|
+      ci_without_boxes.each do |content_item|
         variant  = content_item.variant
         quantity = content_item.quantity
         product  = variant.product
@@ -84,14 +84,27 @@ module Spree
     end
 
     # Generates an array of Package objects based on the quantities and weights of the variants in the line items
-    def packages(solidus_package)
+    def to_packages(solidus_package)
       active_shipping_packages = []
-      weights = convert_package_to_weights_array(solidus_package)
+
+      ci_without_boxes = []
+      ci_with_boxes = []
+      # Product with no associated product packages will be combined in packages based on weight
+      # Product with associated product packages will be added individually based on their attributes
+      solidus_package.contents.each do |ci|
+        if ci.variant_has_product_packages?
+          ci_with_boxes << ci
+        else
+          ci_without_boxes << ci
+        end
+      end
+
+      weights = convert_package_to_weights_array(ci_without_boxes)
       dimensions = convert_package_to_dimensions_array(solidus_package)
-      item_specific_packages = convert_package_to_item_packages_array(solidus_package)
+      item_specific_packages = convert_package_to_item_packages_array(ci_with_boxes)
 
       if max_weight <= 0
-        active_shipping_packages << ::ActiveShipping::Package.new(weights.sum, dimensions, units: units)
+        active_shipping_packages << ::ActiveShipping::Package.new(weights.sum, dimensions, units: units) unless weights.empty?
       else
         package_weight = 0
         weights.each do |content_weight|
@@ -108,7 +121,7 @@ module Spree
       item_specific_packages.each do |product_package|
         active_shipping_packages << ::ActiveShipping::Package.new(product_package.weight * multiplier, [product_package.length, product_package.width, product_package.height], units: units)
       end
-
+      
       active_shipping_packages
     end
 
