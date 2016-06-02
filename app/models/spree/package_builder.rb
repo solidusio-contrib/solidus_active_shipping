@@ -39,35 +39,18 @@ module Spree
 
     def convert_package_to_weights_array(package)
       weights = package.contents.map do |content_item|
-        item_weight = content_item.variant.weight.to_f
+        item_weight = content_item.weight
         item_weight = default_weight if item_weight <= 0
         item_weight *= multiplier
 
-        quantity = content_item.quantity
-        if max_weight <= 0
-          item_weight * quantity
-        elsif item_weight == 0
-          0
-        else
-          if item_weight < max_weight
-            max_quantity = (max_weight / item_weight).floor
-            if quantity < max_quantity
-              item_weight * quantity
-            else
-              new_items = []
-              while quantity > 0
-                new_quantity = [max_quantity, quantity].min
-                new_items << (item_weight * new_quantity)
-                quantity -= new_quantity
-              end
-              new_items
-            end
-          else
-            raise Spree::ShippingError, "#{I18n.t(:shipping_error)}: The maximum per package weight for the selected service from the selected country is #{max_weight} ounces."
-          end
+        if (item_weight > max_weight) && max_weight > 0
+          raise Spree::ShippingError, "#{I18n.t(:shipping_error)}: The maximum per package weight for the selected service from the selected country is #{max_weight} ounces."
         end
+
+        item_weight
       end
-      weights.flatten.compact.sort
+
+      weights.compact
     end
 
     # Used for calculating Dimensional Weight pricing.
