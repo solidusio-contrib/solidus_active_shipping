@@ -7,6 +7,7 @@ require 'rspec/rails'
 require 'webmock/rspec'
 require 'factory_girl'
 require 'database_cleaner'
+require 'vcr'
 require 'pry'
 # Run any available migration
 ActiveRecord::Migrator.migrate File.expand_path("../dummy/db/migrate/", __FILE__)
@@ -26,6 +27,12 @@ require 'spree/testing_support/url_helpers'
 Dir[File.join(File.dirname(__FILE__), "factories/*.rb")].each {|f| require f }
 
 require 'rspec/active_model/mocks'
+
+VCR.configure do |config|
+  config.cassette_library_dir = 'spec/cassettes'
+  config.hook_into :webmock
+  config.configure_rspec_metadata!
+end
 
 RSpec.configure do |config|
   config.include Spree::TestingSupport::ControllerRequests, type: :controller
