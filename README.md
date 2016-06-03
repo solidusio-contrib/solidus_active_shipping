@@ -123,6 +123,12 @@ Say you have your weights in **kg** you would have to set the multiplier to **0.
 ```ruby
 Spree::ActiveShipping::Config[:unit_multiplier] = 0.0283495
 ```
+## Product packages ##
+
+This extension adds ProductPackages to the Spree::Product. This model can be used to explicitly define how a product is physically shipped.
+For example, you can have a 200lbs product that ships in five smaller 40lbs packages. This allows you to use calculators who would be unavailable otherwise
+because of their weight limits (if a calculator has a max weight of 150lbs, it would not be possible to ship the aforementioned product if we account
+only for total product weight, while the product packages will allow you to ship it since each individual 40lbs product package is under the limit)
 
 Cache
 ------------
