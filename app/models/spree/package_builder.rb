@@ -8,6 +8,8 @@ module Spree
       to_packages(solidus_package)
     end
 
+    private
+
     # Configuration 
     def units
       Spree::ActiveShipping::Config[:units].to_sym
@@ -20,8 +22,6 @@ module Spree
     def default_weight
       Spree::ActiveShipping::Config[:default_weight]
     end
-
-    private
 
     def convert_package_to_weights_array(product_with_product_packages)
       weights = product_with_product_packages.map do |content_item|

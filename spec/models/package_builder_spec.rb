@@ -15,18 +15,6 @@ describe Spree::PackageBuilder do
     allow(package_builder).to receive(:multiplier).and_return(1)
   end
 
-  it 'has a a unit_multiplier value' do
-    expect(package_builder.multiplier).not_to be_nil
-  end
-
-  it 'has a a units value' do
-    expect(package_builder.units).not_to be_nil
-  end
-
-  it 'has a a default_weight value' do
-    expect(package_builder.default_weight).not_to be_nil
-  end
-
   describe 'process' do
     include_context 'package setup'
 
