@@ -27,12 +27,14 @@ module Spree
 
         def compute_package(package)
           order = package.order
+          max_weight = get_max_weight(package)
+
           stock_location = package.stock_location
 
           origin = build_location(stock_location)
           destination = build_location(order.ship_address)
 
-          rates_result = retrieve_rates_from_cache(package, origin, destination)
+          rates_result = retrieve_rates_from_cache(package, origin, destination, max_weight)
 
           return nil if rates_result.kind_of?(Spree::ShippingError)
           return nil if rates_result.empty?
@@ -74,10 +76,30 @@ module Spree
 
         private
 
-        def package_builder
-          Spree::PackageBuilder.new(self)
+        def get_max_weight(solidus_package)
+          order = solidus_package.order
+
+          # Default value from calculator
+          max_weight = max_weight_for_country(order.ship_address.country)
+
+          # If max_weight is zero or max_weight_per_package is less than max_weight
+          # We use the max_weight_per_package instead
+          if max_weight.zero? && max_weight_per_package.nonzero?
+            return max_weight_per_package
+          elsif max_weight > 0 && max_weight_per_package < max_weight && max_weight_per_package > 0
+            return max_weight_per_package
+          end
+
+          max_weight
         end
 
+        def package_builder
+          @package_builder ||= Spree::PackageBuilder.new
+        end
+
+        def max_weight_per_package
+          Spree::ActiveShipping::Config[:max_weight_per_package] * Spree::ActiveShipping::Config[:unit_multiplier]
+        end
         # check for known limitations inside a package
         # that will limit you from shipping using a service
         def is_package_shippable? package
@@ -175,9 +197,9 @@ module Spree
                        zip: address.zipcode)
         end
 
-        def retrieve_rates_from_cache package, origin, destination
+        def retrieve_rates_from_cache package, origin, destination, max_weight
           Rails.cache.fetch(cache_key(package)) do
-            shipment_packages = package_builder.process(package)
+            shipment_packages = package_builder.process(package, max_weight)
             #shipment_packages = packages(package)
             if shipment_packages.empty?
               {}

@@ -8,7 +8,7 @@ describe Spree::PackageBuilder do
     Spree::Calculator::Shipping::ActiveShipping::BogusCalculator.new
   end
 
-  let(:package_builder) { Spree::PackageBuilder.new(shipping_calculator) }
+  let(:package_builder) { Spree::PackageBuilder.new }
 
   before do
     # We disable the multiplier so it's simpler to test
@@ -27,60 +27,12 @@ describe Spree::PackageBuilder do
     expect(package_builder.default_weight).not_to be_nil
   end
 
-  it 'has a a max_weight_per_package value' do
-    expect(package_builder.max_weight_per_package).not_to be_nil
-  end
-
-  # We make an exception and tests this the private method because max_weight values
-  # are difficult to tests conclusively through the
-  describe 'get_max_weight' do
-    include_context 'package setup'
-
-    context 'when the max_weight from the calculator is non-zero and max_weight_per_package is zero' do
-      before do
-        allow(shipping_calculator).to receive(:max_weight_for_country).and_return(1)
-        allow(package_builder).to receive(:max_weight_per_package).and_return(0)
-      end
-
-      it 'uses the max_weight_for_country as a max_weight' do
-        expect(package_builder.send(:get_max_weight, package)).to eq shipping_calculator.send(:max_weight_for_country)
-      end
-    end
-
-    context 'when the max_weight from the calculator is zero and max_weight_per_package is non-zero' do
-      before do
-        allow(shipping_calculator).to receive(:max_weight_for_country).and_return(0)
-        allow(package_builder).to receive(:max_weight_per_package).and_return(1)
-      end
-
-      it 'uses the max_weight_per_package as a max_weight' do
-        expect(package_builder.send(:get_max_weight, package)).to eq package_builder.max_weight_per_package
-      end
-    end
-
-    context 'when the max_weight from the calculator is non-zero and max_weight_per_package is non-zero' do
-      before do
-        allow(package_builder).to receive(:max_weight_per_package).and_return(SecureRandom.random_number(19) + 1)
-        allow(shipping_calculator).to receive(:max_weight_for_country).and_return(SecureRandom.random_number(19) + 1)
-      end
-
-      it 'uses the lesser one of the two values' do
-        min = [shipping_calculator.send(:max_weight_for_country), package_builder.max_weight_per_package].min
-        expect(package_builder.send(:get_max_weight, package)).to eq min
-      end
-    end
-
-    context 'when the max_weight is zero and max_weight_per_package is zero' do
-      it 'uses 0 as a max_eight' do
-        expect(package_builder.send(:get_max_weight, package)).to be_zero
-      end
-    end
-  end
-
   describe 'process' do
     include_context 'package setup'
 
-    subject { package_builder.process(package) }
+    let(:max_weight) { 0 }
+
+    subject { package_builder.process(package, max_weight) }
 
     it 'returns an array of ActiveShipping::Package' do
       expect(subject.map(&:class).uniq).to match_array([ActiveShipping::Package])
@@ -115,10 +67,7 @@ describe Spree::PackageBuilder do
 
       context 'when there is non-zero max_weight' do
         context 'when the product_package weight exceeds the allowed max_weight' do
-          before do
-            allow(package_builder).to receive(:max_weight_per_package).and_return(0)
-            allow(shipping_calculator).to receive(:max_weight_for_country).and_return(1)
-          end
+          let(:max_weight) { product_weight - 1 }
 
           it 'raise a Spree::Shipping error' do
             expect { subject }.to raise_error(Spree::ShippingError)
@@ -126,9 +75,7 @@ describe Spree::PackageBuilder do
         end
 
         context 'when the product_packages weight does not exceed the allowed max_weight' do
-          before do
-            allow(shipping_calculator).to receive(:max_weight_for_country).and_return(product_weight + 1000)
-          end
+          let(:max_weight) { 1000 }
 
           it 'return a ActiveShipping::Package for each ProductPackage of each ContentItem' do
             # Each individual item in the Order as a 1-1 association with a ContentItem
@@ -138,11 +85,7 @@ describe Spree::PackageBuilder do
         end
       end
 
-      context 'when there is no max weight' do
-        before do
-          allow(package_builder).to receive(:get_max_weight).and_return(0)
-        end
-
+      context 'when there is no max weight (0)' do
         it 'return a ActiveShipping::Package for each ProductPackage of each ContentItem' do
           # Each individual item in the Order as a 1-1 association with a ContentItem
           expected_size = package.contents.sum { |item| item.variant.product.product_packages.size }
@@ -155,27 +98,31 @@ describe Spree::PackageBuilder do
       include_context 'package setup'
 
       context 'when there is non-zero max_weight' do
-        it 'will combine items into the same package if their combined weight is lower than the max_weight' do
-          allow(package_builder).to receive(:get_max_weight).and_return(package.weight + 1)
-          expect(subject.size).to eq 1
+        context 'and their combined weight is lower than the max_weight' do
+          let(:max_weight) { package.weight + 1 }
+
+          it 'will combine items into the same package' do
+            expect(subject.size).to eq 1
+          end
         end
 
-        it 'will split items into multiple packages if their combined weight is higher than the max_weight' do
-          allow(package_builder).to receive(:get_max_weight).and_return(package.weight - 1)
-          expect(subject.size).to eq 2
+        context 'and their combined weight is higher than the max_weight' do
+          let(:max_weight) { package.weight - 1 }
+
+          it 'will split items into multiple packages' do
+            expect(subject.size).to eq 2
+          end
         end
 
-        it 'will raise an error if a single item weight is higher than the max_weight' do
-          allow(package_builder).to receive(:get_max_weight).and_return(variant_2.weight - 1)
-          expect { subject }.to raise_error(Spree::ShippingError)
+        context 'and the weight of a single item is higher than the max_weight' do
+          let(:max_weight) { variant_2.weight - 1 }
+          it 'will raise an Spree::ShippingError' do
+            expect { subject }.to raise_error(Spree::ShippingError)
+          end
         end
       end
 
       context 'when there is no max_weight' do
-        before do
-          allow(package_builder).to receive(:get_max_weight).and_return(0)
-        end
-
         it 'will combine all items into the same package' do
           expect(subject.size).to eq 1
         end
@@ -207,8 +154,9 @@ describe Spree::PackageBuilder do
                          build_content_items(product_no_packages, 1, order)].flatten)
       end
 
+      let(:max_weight) { 1000 }
+
       it 'products with product_packages will not be combined with product with no packages' do
-        allow(package_builder).to receive(:get_max_weight).and_return(1000)
         active_shipping_packages = subject
         # First package in the array is the "default package" who should
         # only include product_with_no_packages x2

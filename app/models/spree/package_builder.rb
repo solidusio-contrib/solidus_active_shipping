@@ -1,20 +1,10 @@
 module Spree
   class PackageBuilder
-    extend Forwardable
-
-    attr_reader :shipping_calculator
     attr_accessor :max_weight
 
-    def_instance_delegator :shipping_calculator, :max_weight_for_country
-
-    def initialize(shipping_calculator)
-      @shipping_calculator = shipping_calculator
-    end
-
-    def process(solidus_package)
+    def process(solidus_package, max_weight)
       # We compute and set the max_weight once, at the beginning of the process
-      @max_weight = get_max_weight(solidus_package)
-
+      @max_weight = max_weight
       to_packages(solidus_package)
     end
 
@@ -29,10 +19,6 @@ module Spree
 
     def default_weight
       Spree::ActiveShipping::Config[:default_weight]
-    end
-
-    def max_weight_per_package
-      Spree::ActiveShipping::Config[:max_weight_per_package] * multiplier
     end
 
     private
@@ -123,23 +109,6 @@ module Spree
       end
       
       active_shipping_packages
-    end
-
-    def get_max_weight(solidus_package)
-      order = solidus_package.order
-
-      # Default value from calculator
-      max_weight = max_weight_for_country(order.ship_address.country)
-
-      # If max_weight is zero or max_weight_per_package is less than max_weight
-      # We use the max_weight_per_package instead
-      if max_weight.zero? && max_weight_per_package.nonzero?
-        return max_weight_per_package
-      elsif max_weight > 0 && max_weight_per_package < max_weight && max_weight_per_package > 0
-        return max_weight_per_package
-      end
-
-      max_weight
     end
   end
 end
