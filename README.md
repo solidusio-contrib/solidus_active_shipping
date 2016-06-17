@@ -108,21 +108,30 @@ Spree::ActiveShipping::Config[:default_weight]
 ```
 
 ## Weight units
-Weights are expected globally inside ```solidus_active_shipping``` to be entered in a unit that can be divided to oz and a global variable was added to help with unit conversion
+```ruby
+Spree::ActiveShipping::Config[:units]
+```
+
+Product/variant weights in Solidus are not tied to a specific weight system (:imperial or :metric) since the values are only numeric. This value is sent to ActiveShipping so that calculations can be made in the needed weight system. By default this value is set to :imperial but can be switched to :metric.
 
 ```ruby
 Spree::ActiveShipping::Config[:unit_multiplier]
 ```
 
-It is important to note that by default this variable is set to have a value of **16** expecting weights to be entered in **lbs**
+ActiveShipping use grams or ounces depending on the weight system specified. If your products weight values are set in a different unit, you can use this parameter to automatically convert them. For example, if your products have their weights in lb, you can set this value to 16 to convert them to oz (as expected by ActiveShipping if using :imperial) since 1 lb = 16 oz.
+
+It is important to note that by default this variable is set to have a value of **16** expecting weights to be entered in **lb**.
+
+For more details on how ActiveShipping use this data, refer to the [active_shipping] (http://github.com/Shopify/active_shipping/tree/master) documentation.
 
 ### Example of converting from metric system to oz
 
-Say you have your weights in **kg** you would have to set the multiplier to **0.0283495**
+Say you have your weights in **kg** you would have to set the multiplier to **0.028**
 
 ```ruby
-Spree::ActiveShipping::Config[:unit_multiplier] = 0.0283495
+Spree::ActiveShipping::Config[:unit_multiplier] = 0.0283
 ```
+
 ## Product packages ##
 
 This extension adds ProductPackages to the Spree::Product. This model can be used to explicitly define how a product is physically shipped.
