@@ -6,7 +6,7 @@ class CreateProductPackages < ActiveRecord::Migration
       t.integer "width",      :default => 0, :null => false
       t.integer "height",     :default => 0, :null => false
       t.integer "weight",     :default => 0, :null => false
-      t.timestamps
+      t.timestamps :null => false
     end
   end
 end
