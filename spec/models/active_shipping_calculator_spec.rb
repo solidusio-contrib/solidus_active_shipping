@@ -7,7 +7,6 @@ describe Spree::Calculator::Shipping do
   let(:address) { FactoryGirl.create(:address) }
   let(:variant_1) { FactoryGirl.create(:variant, weight: 1) }
   let(:variant_2) { FactoryGirl.create(:variant, weight: 2) }
-  let!(:stock_location) { FactoryGirl.create(:stock_location) }
   let!(:order) do
     FactoryGirl.create(:order_with_line_items, ship_address: address, line_items_count: 2,
                        line_items_attributes: [{ quantity: 2, variant: variant_1}, { quantity: 2, variant: variant_2 }] )
@@ -21,13 +20,6 @@ describe Spree::Calculator::Shipping do
     Spree::ActiveShipping::Config.set(units: 'imperial')
     Spree::ActiveShipping::Config.set(unit_multiplier: 1)
     Spree::ActiveShipping::Config.set(handling_fee: 0)
-  end
-
-  describe 'package.order' do
-    it { expect(package.order).to eq(order) }
-    it { expect(package.order.ship_address).to eq(address) }
-    it { expect(package.order.ship_address.country.iso).to eq('US') }
-    it { expect(package.stock_location).to eq(stock_location) }
   end
 
   describe 'available' do
