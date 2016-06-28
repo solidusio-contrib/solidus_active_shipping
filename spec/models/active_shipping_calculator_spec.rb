@@ -9,7 +9,7 @@ describe Spree::Calculator::Shipping do
   let(:variant_2) { FactoryGirl.create(:variant, weight: 2) }
   let!(:order) do
     FactoryGirl.create(:order_with_line_items, ship_address: address, line_items_count: 2,
-                       line_items_attributes: [{ quantity: 2, variant: variant_1}, { quantity: 2, variant: variant_2 }] )
+                                               line_items_attributes: [{ quantity: 2, variant: variant_1 }, { quantity: 2, variant: variant_2 }])
   end
 
   let(:calculator) { Spree::Calculator::Shipping::ActiveShipping::BogusCalculator.new }
@@ -36,7 +36,7 @@ describe Spree::Calculator::Shipping do
 
     context 'when rates are not available' do
       let(:invalid_response) do
-        ::ActiveShipping::RateResponse.new(true, "success!", {}, :rates => [], :xml => "")
+        ::ActiveShipping::RateResponse.new(true, 'success!', {}, rates: [], xml: '')
       end
 
       before do
@@ -72,7 +72,7 @@ describe Spree::Calculator::Shipping do
 
   describe 'compute' do
     subject { calculator.compute(package) }
-    
+
     # It's passing but probably because it's not checking anything
     xit 'should ignore variants that have a nil weight' do
       variant = order.line_items.first.variant
@@ -87,8 +87,7 @@ describe Spree::Calculator::Shipping do
       subject
     end
 
-    context "when the cache is warm" do
-
+    context 'when the cache is warm' do
       it 'should check the cache first before finding rates' do
         # Since the cache is cleared between the tests, cache.fetch will return a miss,
         # but by passing a block { Hash.new }, the return value of the block will be
@@ -99,7 +98,7 @@ describe Spree::Calculator::Shipping do
       end
     end
 
-    context "when the cache is empty" do
+    context 'when the cache is empty' do
       before do
         # We're stubbing the carrier method because we
         # need to check that a specific instance of carrier
@@ -126,7 +125,7 @@ describe Spree::Calculator::Shipping do
       end
 
       it 'should return nil if service_name is not found in rate_hash' do
-        allow(calculator.class).to receive(:description) {'invalid service_name'}
+        allow(calculator.class).to receive(:description) { 'invalid service_name' }
         expect(subject).to be_nil
       end
     end
@@ -137,7 +136,7 @@ describe Spree::Calculator::Shipping do
       end
 
       it 'should raise a Spree::ShippingError' do
-        expect{ subject }.to raise_exception(Spree::ShippingError)
+        expect { subject }.to raise_exception(Spree::ShippingError)
       end
     end
   end
@@ -148,8 +147,8 @@ describe Spree::Calculator::Shipping do
     end
   end
 
-  #We make an exception and tests this the private method because max_weight values
-  #are difficult to tests conclusively through the
+  # We make an exception and tests this the private method because max_weight values
+  # are difficult to tests conclusively through the
   describe 'get_max_weight' do
     include_context 'US stock location'
     include_context 'package setup'

@@ -10,7 +10,7 @@ module Spree
 
     private
 
-    # Configuration 
+    # Configuration
     def units
       Spree::ActiveShipping::Config[:units].to_sym
     end
@@ -58,7 +58,7 @@ module Spree
         product.product_packages.each do |product_package|
           if product_package.weight.to_f <= max_weight || max_weight == 0
             quantity.times do
-               packages << product_package
+              packages << product_package
             end
           else
             raise Spree::ShippingError, "#{I18n.t(:shipping_error)}: The maximum per package weight for the selected service from the selected country is #{max_weight} ounces."
@@ -107,7 +107,7 @@ module Spree
       item_specific_packages.each do |product_package|
         active_shipping_packages << ::ActiveShipping::Package.new(product_package.weight * multiplier, [product_package.length, product_package.width, product_package.height], units: units)
       end
-      
+
       active_shipping_packages
     end
   end
