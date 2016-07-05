@@ -35,7 +35,6 @@ FactoryGirl.define do
         order: order,
         cost: evaluator.shipment_cost,
         shipping_method: evaluator.shipping_method,
-        address: evaluator.ship_address,
         stock_location: evaluator.stock_location
       )
 
