@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'FedEx calculators', :vcr do
   include_context 'FedEx setup'
-  include_context 'package setup'
+  include_context 'US package setup'
 
   subject { described_class.new.compute_package(package) }
 

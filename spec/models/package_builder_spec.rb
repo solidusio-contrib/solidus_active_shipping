@@ -16,7 +16,7 @@ describe Spree::PackageBuilder do
   end
 
   describe 'process' do
-    include_context 'package setup'
+    include_context 'US package setup'
 
     let(:max_weight) { 0 }
 
@@ -101,7 +101,7 @@ describe Spree::PackageBuilder do
     end
 
     context 'with an order containing only products without any associated product_packages' do
-      include_context 'package setup'
+      include_context 'US package setup'
 
       context 'when there is non-zero max_weight' do
         context 'and their combined weight is lower than the max_weight' do
