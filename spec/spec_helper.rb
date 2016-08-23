@@ -6,6 +6,7 @@ require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 require 'rspec/rails'
 require 'webmock/rspec'
 require 'factory_girl'
+require 'ffaker'
 require 'database_cleaner'
 require 'vcr'
 require 'pry'

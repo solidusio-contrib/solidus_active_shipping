@@ -16,16 +16,18 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_paths = ["lib"]
 
-  s.add_dependency('solidus', '~> 1.0')
-  s.add_dependency('active_shipping', '~> 1.7.0')
+  s.add_dependency 'solidus', ['> 1.0', '<3']
+  s.add_dependency 'active_shipping', '~> 1.8.0'
   s.add_development_dependency 'pry'
   s.add_development_dependency 'webmock'
   s.add_development_dependency 'simplecov'
-  s.add_development_dependency 'rspec-rails', '~> 3.4'
+  s.add_development_dependency 'rspec-rails', '~> 3.5'
   s.add_development_dependency 'rspec-activemodel-mocks'
   s.add_development_dependency 'database_cleaner', '~> 1.2'
   s.add_development_dependency 'capybara', '~> 2.7'
   s.add_development_dependency 'poltergeist', '~> 1.9'
   s.add_development_dependency 'vcr'
+  s.add_development_dependency 'factory_girl_rails'
+  s.add_development_dependency 'capybara-screenshot'
   s.add_dependency 'carmen', '~> 1.0.0'
 end

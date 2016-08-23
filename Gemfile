@@ -1,16 +1,18 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-branch = ENV.fetch('SOLIDUS_BRANCH', 'v1.0')
-gem 'solidus', github: 'solidusio/solidus', branch: branch
-gem 'sqlite3'
-gem 'factory_girl_rails', '~> 4.5.0', group: :test
+branch = ENV.fetch('SOLIDUS_BRANCH', 'master')
+gem "solidus", github: "solidusio/solidus", branch: branch
 
-group :development, :test do
-  gem 'ffaker'
-  gem 'capybara-screenshot'
+if branch == 'master' || branch >= "v2.0"
+  gem "rails-controller-testing", group: :test
 end
 
+gem 'sqlite3'
 gem 'pg'
 gem 'mysql2'
+
+group :development, :test do
+  gem "pry-rails"
+end
 
 gemspec
