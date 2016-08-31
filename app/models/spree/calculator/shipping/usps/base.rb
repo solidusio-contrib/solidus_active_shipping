@@ -11,11 +11,12 @@ module Spree
         def compute_package(package)
           order = package.order
           stock_location = package.stock_location
+          max_weight = get_max_weight(package)
 
           origin = build_location(stock_location)
           destination = build_location(order.ship_address)
 
-          rates_result = retrieve_rates_from_cache(package, origin, destination)
+          rates_result = retrieve_rates_from_cache(package, origin, destination, max_weight)
 
           return nil if rates_result.kind_of?(Spree::ShippingError)
           return nil if rates_result.empty?

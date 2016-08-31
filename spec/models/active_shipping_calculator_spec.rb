@@ -9,7 +9,7 @@ describe Spree::Calculator::Shipping do
   let(:variant_2) { FactoryGirl.create(:variant, weight: 2) }
   let!(:order) do
     FactoryGirl.create(:order_with_line_items, ship_address: address, line_items_count: 2,
-                       line_items_attributes: [{ quantity: 2, variant: variant_1}, { quantity: 2, variant: variant_2 }] )
+                                               line_items_attributes: [{ quantity: 2, variant: variant_1 }, { quantity: 2, variant: variant_2 }])
   end
 
   let(:calculator) { Spree::Calculator::Shipping::ActiveShipping::BogusCalculator.new }
@@ -36,7 +36,7 @@ describe Spree::Calculator::Shipping do
 
     context 'when rates are not available' do
       let(:invalid_response) do
-        ::ActiveShipping::RateResponse.new(true, "success!", {}, :rates => [], :xml => "")
+        ::ActiveShipping::RateResponse.new(true, 'success!', {}, rates: [], xml: '')
       end
 
       before do
@@ -72,7 +72,7 @@ describe Spree::Calculator::Shipping do
 
   describe 'compute' do
     subject { calculator.compute(package) }
-    
+
     # It's passing but probably because it's not checking anything
     xit 'should ignore variants that have a nil weight' do
       variant = order.line_items.first.variant
@@ -87,8 +87,7 @@ describe Spree::Calculator::Shipping do
       subject
     end
 
-    context "when the cache is warm" do
-
+    context 'when the cache is warm' do
       it 'should check the cache first before finding rates' do
         # Since the cache is cleared between the tests, cache.fetch will return a miss,
         # but by passing a block { Hash.new }, the return value of the block will be
@@ -99,7 +98,7 @@ describe Spree::Calculator::Shipping do
       end
     end
 
-    context "when the cache is empty" do
+    context 'when the cache is empty' do
       before do
         # We're stubbing the carrier method because we
         # need to check that a specific instance of carrier
@@ -126,7 +125,7 @@ describe Spree::Calculator::Shipping do
       end
 
       it 'should return nil if service_name is not found in rate_hash' do
-        allow(calculator.class).to receive(:description) {'invalid service_name'}
+        allow(calculator.class).to receive(:description) { 'invalid service_name' }
         expect(subject).to be_nil
       end
     end
@@ -137,7 +136,7 @@ describe Spree::Calculator::Shipping do
       end
 
       it 'should raise a Spree::ShippingError' do
-        expect{ subject }.to raise_exception(Spree::ShippingError)
+        expect { subject }.to raise_exception(Spree::ShippingError)
       end
     end
   end
@@ -145,6 +144,53 @@ describe Spree::Calculator::Shipping do
   describe 'service_name' do
     it 'should return description when not defined' do
       expect(calculator.class.service_name).to eq calculator.description
+    end
+  end
+
+  # We make an exception and tests this the private method because max_weight values
+  # are difficult to tests conclusively through the
+  describe 'get_max_weight' do
+    include_context 'US stock location'
+    include_context 'package setup'
+
+    context 'when the max_weight from the calculator is non-zero and max_weight_per_package is zero' do
+      before do
+        allow(calculator).to receive(:max_weight_for_country).and_return(1)
+        allow(calculator).to receive(:max_weight_per_package).and_return(0)
+      end
+
+      it 'uses the max_weight_for_country as a max_weight' do
+        expect(calculator.send(:get_max_weight, package)).to eq calculator.send(:max_weight_for_country)
+      end
+    end
+
+    context 'when the max_weight from the calculator is zero and max_weight_per_package is non-zero' do
+      before do
+        allow(calculator).to receive(:max_weight_for_country).and_return(0)
+        allow(calculator).to receive(:max_weight_per_package).and_return(1)
+      end
+
+      it 'uses the max_weight_per_package as a max_weight' do
+        expect(calculator.send(:get_max_weight, package)).to eq calculator.send(:max_weight_per_package)
+      end
+    end
+
+    context 'when the max_weight from the calculator is non-zero and max_weight_per_package is non-zero' do
+      before do
+        allow(calculator).to receive(:max_weight_per_package).and_return(SecureRandom.random_number(19) + 1)
+        allow(calculator).to receive(:max_weight_for_country).and_return(SecureRandom.random_number(19) + 1)
+      end
+
+      it 'uses the lesser one of the two values' do
+        min = [calculator.send(:max_weight_for_country), calculator.send(:max_weight_per_package)].min
+        expect(calculator.send(:get_max_weight, package)).to eq min
+      end
+    end
+
+    context 'when the max_weight is zero and max_weight_per_package is zero' do
+      it 'uses 0 as a max_eight' do
+        expect(calculator.send(:get_max_weight, package)).to be_zero
+      end
     end
   end
 end
