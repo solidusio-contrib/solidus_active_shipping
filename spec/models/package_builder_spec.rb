@@ -31,6 +31,24 @@ describe Spree::PackageBuilder do
       expect(subject.sum(&:weight)).to eq (package.weight * 2)
     end
 
+    context 'when one product has a zero weight' do
+      let(:variant_1) { FactoryGirl.create(:variant, weight: 0) }
+
+      it 'ignores products with nil weight' do
+        expect(subject.sum(&:weight)).to eq (variant_2.weight * 2)
+      end
+    end
+
+    context 'when one product has a nil weight' do
+      let(:variant_1) { FactoryGirl.create(:variant, weight: nil) }
+      let(:variant_2) { FactoryGirl.create(:variant, weight: nil) }
+      let(:default_weight) { Spree::ActiveShipping::Config[:default_weight] }
+
+      it 'use the default_weight as a weight value' do
+        expect(subject.sum(&:weight)).to eq( default_weight * 4 )
+      end
+    end
+
     context 'with an order containing only products with associated product_packages' do
       let(:product_weight) { 20 }
       let(:product_package1) { FactoryGirl.create(:product_package, weight: product_weight) }
@@ -42,7 +60,7 @@ describe Spree::PackageBuilder do
           product: build(
             :product,
             product_packages: [product_package1, product_package2]
-          )
+        )
         )
       end
 
@@ -130,7 +148,7 @@ describe Spree::PackageBuilder do
           product: build(
             :product,
             product_packages: [product_package1, product_package2]
-          )
+        )
         )
       end
 

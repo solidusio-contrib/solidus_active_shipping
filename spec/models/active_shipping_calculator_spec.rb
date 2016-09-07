@@ -73,20 +73,6 @@ describe Spree::Calculator::Shipping do
   describe 'compute' do
     subject { calculator.compute(package) }
 
-    # It's passing but probably because it's not checking anything
-    xit 'should ignore variants that have a nil weight' do
-      variant = order.line_items.first.variant
-      variant.weight = nil
-      variant.save
-      subject
-    end
-
-    xit 'should create a package with the correct total weight in ounces' do
-      # (10 * 2 + 5.25 * 1) * 16 = 404
-      expect(Package).to receive(:new).with(404, [], units: :imperial)
-      subject
-    end
-
     context 'when the cache is warm' do
       it 'should check the cache first before finding rates' do
         # Since the cache is cleared between the tests, cache.fetch will return a miss,
