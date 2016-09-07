@@ -45,7 +45,22 @@ describe Spree::PackageBuilder do
       let(:default_weight) { Spree::ActiveShipping::Config[:default_weight] }
 
       it 'use the default_weight as a weight value' do
-        expect(subject.sum(&:weight)).to eq( default_weight * 4 )
+        expect(subject.sum(&:weight)).to eq(default_weight * 4)
+      end
+    end
+
+    context 'when the default_weight is nil' do
+      # We replace the weight of one of the variants we used
+      # so Spree::ActiveShipping::Config[:default_weight] is
+      # called
+      let(:variant_1) { FactoryGirl.create(:variant, weight: nil) }
+
+      before do
+        allow(Spree::ActiveShipping::Config).to receive(:[]).with(:default_weight).and_return(nil)
+      end
+
+      it 'raises a NoMethodError' do
+        expect { subject }.to raise_error(NoMethodError)
       end
     end
 
@@ -60,7 +75,7 @@ describe Spree::PackageBuilder do
           product: build(
             :product,
             product_packages: [product_package1, product_package2]
-        )
+          )
         )
       end
 
@@ -148,7 +163,7 @@ describe Spree::PackageBuilder do
           product: build(
             :product,
             product_packages: [product_package1, product_package2]
-        )
+          )
         )
       end
 
