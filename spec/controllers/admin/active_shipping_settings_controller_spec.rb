@@ -12,9 +12,13 @@ describe Spree::Admin::ActiveShippingSettingsController do
   end
 
   context '#update' do
+    subject { spree_post :update, params }
+
     let(:config) { Spree::ActiveShippingConfiguration.new }
 
     context 'with existing value' do
+      let(:params) { { default_weight: 42 } }
+
       around do |example|
         default_weight = config.get_preference(:default_weight)
         example.run
@@ -23,14 +27,21 @@ describe Spree::Admin::ActiveShippingSettingsController do
 
       it "updates the existing value" do
         expect(config.has_preference?(:default_weight)).to be(true)
-        spree_post :update, default_weight: 42
+        subject
         expect(config.send("preferred_default_weight")).to be(42)
+      end
+
+      it "adds a flash message" do
+        subject
+        expect(flash[:success]).to eq("Successfully updated configuration")
       end
     end
 
     context 'without existing value' do
+      let(:params) { { not_real_parameter_name: :not_real } }
+
       it "doesn't produce an error" do
-        spree_post :update, 'not_real_parameter_name' => 'not_real'
+        subject
         expect(response).to redirect_to(spree.edit_admin_active_shipping_settings_path)
       end
     end

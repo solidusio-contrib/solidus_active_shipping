@@ -1,5 +1,4 @@
 class Spree::Admin::ActiveShippingSettingsController < Spree::Admin::BaseController
-
   def edit
     @preferences_UPS = [:ups_login, :ups_password, :ups_key, :shipper_number]
     @preferences_FedEx = [:fedex_login, :fedex_password, :fedex_account, :fedex_key]
@@ -21,9 +20,7 @@ class Spree::Admin::ActiveShippingSettingsController < Spree::Admin::BaseControl
       config[name] = value
     end
 
+    flash[:success] = "Successfully updated configuration"
     redirect_to edit_admin_active_shipping_settings_path
   end
-
 end
-
-
