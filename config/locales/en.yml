@@ -63,6 +63,18 @@ en:
     small_packets_air: "Canada Post Small Packets Air"
     parcel_surface: "Canada Post Parcel Surface"
     small_packets_surface: "Canada Post Small Packets Surface"
+  canada_post_pws:
+    regular: Regular Parcel
+    expedited: Expedited Parcel
+    xpresspost: Xpresspost
+    xpresspost_certified: "Xpresspost Certified"
+    priority: Priority
+    expedited_usa: Expedited Parcel USA
+    priority_worldwide_parcel_usa: Priority Worldwide parcel USA
+    xpresspost_usa: Xpresspost USA
+    international_parcel_surface: International Parcel Surface
+    priority_worldwide_parcel: "Priority Worldwide parcel INT'L"
+    xpresspost_international: Xpresspost International
   shipping_error: "Shipping Error"
   spree:
     product_packages: "Product Packages"
