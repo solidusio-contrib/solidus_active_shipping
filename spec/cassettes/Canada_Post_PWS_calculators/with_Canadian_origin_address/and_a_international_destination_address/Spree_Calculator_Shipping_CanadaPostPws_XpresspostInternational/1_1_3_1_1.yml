@@ -1,0 +1,68 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://ct.soa-gw.canadapost.ca/rs/ship/price
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <mailing-scenario xmlns="http://www.canadapost.ca/ws/ship/rate">
+          <customer-number>2004381</customer-number>
+          <quote-type>commercial</quote-type>
+          <parcel-characteristics>
+            <weight>2.722</weight>
+            <mailing-tube>false</mailing-tube>
+            <unpackaged>false</unpackaged>
+          </parcel-characteristics>
+          <origin-postal-code>K1P1J1</origin-postal-code>
+          <destination>
+            <international>
+              <country-code>FR</country-code>
+            </international>
+          </destination>
+        </mailing-scenario>
+    headers:
+      Content-Type:
+      - application/vnd.cpc.ship.rate+xml
+      Authorization:
+      - Basic NmU5M2Q1Mzk2ODg4MTcxNDowYmZhOWZjYjk4NTNkMWY1MWVlNTdh
+      Accept-Language:
+      - en-CA
+      Accept:
+      - application/vnd.cpc.ship.rate+xml
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Oracle-iPlanet-Web-Server/7.0
+      Date:
+      - Wed, 31 Aug 2016 02:35:47 GMT
+      X-Backside-Transport:
+      - OK OK,OK OK
+      Content-Type:
+      - application/vnd.cpc.ship.rate+xml; charset=UTF-8
+      Set-Cookie:
+      - CPO_SSID_P32C1=ffffffff09ed4a7b45525d5f4f58455e445a4a424b55;path=/;httponly
+      X-Global-Transaction-Id:
+      - '2857177937'
+      Svn-Build-Number:
+      - ShippingTools.buildLevel.20160723.ER7B_2016-B9016.9016
+      X-Client-Ip:
+      - 10.229.109.82
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: |-
+        <?xml version="1.0" encoding="UTF-8"?>
+        <price-quotes xmlns="http://www.canadapost.ca/ws/ship/rate"><price-quote><service-code>INT.IP.SURF</service-code><service-link rel="service" href="https://ct.soa-gw.canadapost.ca/rs/ship/service/INT.IP.SURF?country=FR" media-type="application/vnd.cpc.ship.rate+xml"/><service-name>International Parcel Surface</service-name><price-details><base>52.55</base><taxes><gst>0.00</gst><pst>0.00</pst><hst>0.00</hst></taxes><due>54.65</due><adjustments><adjustment><adjustment-code>FUELSC</adjustment-code><adjustment-name>Fuel surcharge</adjustment-name><adjustment-cost>2.10</adjustment-cost><qualifier><percent>4.0</percent></qualifier></adjustment><adjustment><adjustment-code>V1DISC</adjustment-code><adjustment-name>SMB Savings</adjustment-name><adjustment-cost>0.00</adjustment-cost></adjustment></adjustments></price-details><weight-details/><service-standard><am-delivery>false</am-delivery><guaranteed-delivery>false</guaranteed-delivery></service-standard></price-quote><price-quote><service-code>INT.PW.PARCEL</service-code><service-link rel="service" href="https://ct.soa-gw.canadapost.ca/rs/ship/service/INT.PW.PARCEL?country=FR" media-type="application/vnd.cpc.ship.rate+xml"/><service-name>Priority Worldwide parcel INT'L</service-name><price-details><base>172.85</base><taxes><gst>0.00</gst><pst>0.00</pst><hst>0.00</hst></taxes><due>177.17</due><options><option><option-code>DC</option-code><option-name>Delivery confirmation</option-name><option-price>0</option-price></option><option><option-code>SO</option-code><option-name>Signature option</option-name><option-price>0</option-price></option></options><adjustments><adjustment><adjustment-code>FUELSC</adjustment-code><adjustment-name>Fuel surcharge</adjustment-name><adjustment-cost>4.32</adjustment-cost><qualifier><percent>2.5</percent></qualifier></adjustment><adjustment><adjustment-code>V1DISC</adjustment-code><adjustment-name>SMB Savings</adjustment-name><adjustment-cost>0.00</adjustment-cost></adjustment></adjustments></price-details><weight-details/><service-standard><am-delivery>false</am-delivery><guaranteed-delivery>false</guaranteed-delivery></service-standard></price-quote><price-quote><service-code>INT.XP</service-code><service-link rel="service" href="https://ct.soa-gw.canadapost.ca/rs/ship/service/INT.XP?country=FR" media-type="application/vnd.cpc.ship.rate+xml"/><service-name>Xpresspost International</service-name><price-details><base>93.90</base><taxes><gst>0.00</gst><pst>0.00</pst><hst>0.00</hst></taxes><due>102.35</due><options><option><option-code>DC</option-code><option-name>Delivery confirmation</option-name><option-price>0</option-price></option></options><adjustments><adjustment><adjustment-code>FUELSC</adjustment-code><adjustment-name>Fuel surcharge</adjustment-name><adjustment-cost>8.45</adjustment-cost><qualifier><percent>9.0</percent></qualifier></adjustment><adjustment><adjustment-code>V1DISC</adjustment-code><adjustment-name>SMB Savings</adjustment-name><adjustment-cost>0.00</adjustment-cost></adjustment></adjustments></price-details><weight-details/><service-standard><am-delivery>false</am-delivery><guaranteed-delivery>true</guaranteed-delivery><expected-transit-time>4</expected-transit-time><expected-delivery-date>2016-09-06</expected-delivery-date></service-standard></price-quote></price-quotes>
+    http_version: 
+  recorded_at: Wed, 31 Aug 2016 02:35:48 GMT
+recorded_with: VCR 3.0.3

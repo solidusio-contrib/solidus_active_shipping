@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'UPS calculators', :vcr do
   include_context 'UPS setup'
-  include_context 'package setup'
+  include_context 'US package setup'
 
   subject { described_class.new.compute_package(package) }
 

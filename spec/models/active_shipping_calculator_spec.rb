@@ -137,7 +137,7 @@ describe Spree::Calculator::Shipping do
   # are difficult to tests conclusively through the
   describe 'get_max_weight' do
     include_context 'US stock location'
-    include_context 'package setup'
+    include_context 'US package setup'
 
     context 'when the max_weight from the calculator is non-zero and max_weight_per_package is zero' do
       before do
