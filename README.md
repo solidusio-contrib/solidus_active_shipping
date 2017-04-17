@@ -17,18 +17,16 @@ To install the latest edge version of this extension, place this line inside you
 ```ruby
 gem 'solidus_active_shipping', :git => "git://github.com/solidusio-contrib/solidus_active_shipping"
 ```
+**2.** Run bundler:
 
-**2.** Install migrations and migrate database:
+```
+$ bundle
+```
+**3.** Install migrations and migrate database:
 
 ```
 $ bundle exec rake railties:install:migrations
 $ bundle exec rake db:migrate
-```
-
-**3.** Run bundler:
-
-```
-$ bundle
 ```
 
 Rate quotes from carriers
