@@ -1,3 +1,6 @@
+**NOTE:** This is an old and complex extension we are working on bringing up to our standards.
+Please use with caution and report any issues you encounter.
+
 Active Shipping
 ===============
 
