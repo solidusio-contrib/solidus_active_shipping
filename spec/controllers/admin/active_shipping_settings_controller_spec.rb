@@ -5,7 +5,7 @@ describe Spree::Admin::ActiveShippingSettingsController do
 
   context '#edit' do
     it 'should assign a Spree::ActiveShippingConfiguration and render the view' do
-      spree_get :edit
+      get :edit
       expect(assigns(:config)).to be_an_instance_of(Spree::ActiveShippingConfiguration)
       expect(response).to render_template('edit')
     end
@@ -23,14 +23,14 @@ describe Spree::Admin::ActiveShippingSettingsController do
 
       it "updates the existing value" do
         expect(config.has_preference?(:default_weight)).to be(true)
-        spree_post :update, default_weight: 42
+        post :update, params: { default_weight: 42 }
         expect(config.send("preferred_default_weight")).to be(42)
       end
     end
 
     context 'without existing value' do
       it "doesn't produce an error" do
-        spree_post :update, 'not_real_parameter_name' => 'not_real'
+        post :update, params: { 'not_real_parameter_name' => 'not_real' }
         expect(response).to redirect_to(spree.edit_admin_active_shipping_settings_path)
       end
     end
