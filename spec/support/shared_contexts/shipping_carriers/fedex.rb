@@ -1,12 +1,11 @@
 shared_context 'FedEx setup' do
   before do
     WebMock.allow_net_connect!
-    config = Spree::ActiveShippingConfiguration.new
-    config.fedex_login = '118723830'
-    config.fedex_password = 'UGu5boYODXZ2GEDyUN4Xi1v8E'
-    config.fedex_account = '510087143'
-    config.fedex_key = 'xkBPuqiFmGrOU4jL'
-    config.test_mode = true
+    Spree::ActiveShipping::Config[:fedex_login] = '118723830'
+    Spree::ActiveShipping::Config[:fedex_password] = 'UGu5boYODXZ2GEDyUN4Xi1v8E'
+    Spree::ActiveShipping::Config[:fedex_account] = '510087143'
+    Spree::ActiveShipping::Config[:fedex_key] = 'xkBPuqiFmGrOU4jL'
+    Spree::ActiveShipping::Config[:test_mode] = true
   end
 
   after do
