@@ -12,7 +12,7 @@ describe Spree::Admin::ActiveShippingSettingsController do
   end
 
   context '#update' do
-    let(:config) { Spree::ActiveShippingConfiguration.new }
+    let(:config) { Spree::ActiveShipping::Config }
 
     context 'with existing value' do
       around do |example|
