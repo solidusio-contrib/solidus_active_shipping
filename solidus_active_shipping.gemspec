@@ -32,5 +32,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'vcr'
   s.add_development_dependency 'factory_girl_rails'
   s.add_development_dependency 'capybara-screenshot'
+  s.add_development_dependency 'ffaker'
   s.add_dependency 'carmen', '~> 1.0.0'
 end
