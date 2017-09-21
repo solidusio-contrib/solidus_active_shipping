@@ -10,11 +10,11 @@ class Spree::Admin::ActiveShippingSettingsController < Spree::Admin::BaseControl
     @preferences_GeneralSettings = [:units, :unit_multiplier, :default_weight, :handling_fee, 
       :max_weight_per_package, :test_mode]
 
-    @config = Spree::ActiveShippingConfiguration.new
+    @config = Spree::ActiveShipping::Config
   end
 
   def update
-    config = Spree::ActiveShippingConfiguration.new
+    config = Spree::ActiveShipping::Config
 
     params.each do |name, value|
       next unless config.has_preference? name
