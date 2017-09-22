@@ -40,7 +40,11 @@ FactoryGirl.define do
 
       order.shipments.reload
 
-      order.update!
+      if SolidusSupport.solidus_gem_version < Gem::Version.new('2.4.x')
+        order.update!
+      else
+        order.recalculate
+      end
     end
   end
 end
