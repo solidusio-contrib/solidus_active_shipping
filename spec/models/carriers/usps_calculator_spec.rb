@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 describe Spree::Calculator::Shipping::Usps do
-  let(:address) { FactoryGirl.create(:address) }
-  let(:variant_1) { FactoryGirl.create(:variant, weight: 1) }
-  let(:variant_2) { FactoryGirl.create(:variant, weight: 2) }
+  let(:address) { FactoryBot.create(:address) }
+  let(:variant_1) { FactoryBot.create(:variant, weight: 1) }
+  let(:variant_2) { FactoryBot.create(:variant, weight: 2) }
   let!(:order) do
-    FactoryGirl.create(:order_with_line_items, ship_address: address, line_items_count: 2,
+    FactoryBot.create(:order_with_line_items, ship_address: address, line_items_count: 2,
                        line_items_attributes: [{ quantity: 2, variant: variant_1}, { quantity: 2, variant: variant_2 }] )
   end
 

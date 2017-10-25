@@ -32,7 +32,7 @@ describe Spree::PackageBuilder do
     end
 
     context 'when one product has a zero weight' do
-      let(:variant_1) { FactoryGirl.create(:variant, weight: 0) }
+      let(:variant_1) { FactoryBot.create(:variant, weight: 0) }
 
       it 'ignores products with nil weight' do
         expect(subject.sum(&:weight)).to eq (variant_2.weight * 2)
@@ -40,8 +40,8 @@ describe Spree::PackageBuilder do
     end
 
     context 'when one product has a nil weight' do
-      let(:variant_1) { FactoryGirl.create(:variant, weight: nil) }
-      let(:variant_2) { FactoryGirl.create(:variant, weight: nil) }
+      let(:variant_1) { FactoryBot.create(:variant, weight: nil) }
+      let(:variant_2) { FactoryBot.create(:variant, weight: nil) }
       let(:default_weight) { Spree::ActiveShipping::Config[:default_weight] }
 
       it 'use the default_weight as a weight value' do
@@ -53,7 +53,7 @@ describe Spree::PackageBuilder do
       # We replace the weight of one of the variants we used
       # so Spree::ActiveShipping::Config[:default_weight] is
       # called
-      let(:variant_1) { FactoryGirl.create(:variant, weight: nil) }
+      let(:variant_1) { FactoryBot.create(:variant, weight: nil) }
 
       before do
         allow(Spree::ActiveShipping::Config).to receive(:[]).with(:default_weight).and_return(nil)
@@ -66,8 +66,8 @@ describe Spree::PackageBuilder do
 
     context 'with an order containing only products with associated product_packages' do
       let(:product_weight) { 20 }
-      let(:product_package1) { FactoryGirl.create(:product_package, weight: product_weight) }
-      let(:product_package2) { FactoryGirl.create(:product_package, weight: product_weight) }
+      let(:product_package1) { FactoryBot.create(:product_package, weight: product_weight) }
+      let(:product_package2) { FactoryBot.create(:product_package, weight: product_weight) }
       let(:product_with_packages) do
         build(
           :variant,
@@ -152,10 +152,10 @@ describe Spree::PackageBuilder do
 
     context 'with an order containing some products with product_packages and some products without' do
       let(:product_weight) { 20 }
-      let(:product_package1) { FactoryGirl.create(:product_package, weight: product_weight) }
-      let(:product_package2) { FactoryGirl.create(:product_package, weight: product_weight) }
+      let(:product_package1) { FactoryBot.create(:product_package, weight: product_weight) }
+      let(:product_package2) { FactoryBot.create(:product_package, weight: product_weight) }
 
-      let(:product_no_packages) { FactoryGirl.create(:variant, weight: 5) }
+      let(:product_no_packages) { FactoryBot.create(:variant, weight: 5) }
       let(:product_with_packages) do
         build(
           :variant,

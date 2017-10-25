@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'capybara', '~> 2.7'
   s.add_development_dependency 'poltergeist', '~> 1.9'
   s.add_development_dependency 'vcr'
-  s.add_development_dependency 'factory_girl_rails'
+  s.add_development_dependency 'factory_bot_rails'
   s.add_development_dependency 'capybara-screenshot'
   s.add_development_dependency 'ffaker'
 end

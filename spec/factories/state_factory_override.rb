@@ -1,7 +1,7 @@
 require 'carmen'
 require 'spree/testing_support/factories/country_factory'
 
-FactoryGirl.define do
+FactoryBot.define do
   # The state factory was changed too drastically in 1.3 to shim
   # we will need to bring this in until we no longer care about old Solidus
   factory :state_with_autodiscover, class: Spree::State do

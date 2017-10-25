@@ -5,7 +5,7 @@ require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 
 require 'rspec/rails'
 require 'webmock/rspec'
-require 'factory_girl'
+require 'factory_bot'
 require 'ffaker'
 require 'database_cleaner'
 require 'vcr'
@@ -38,7 +38,7 @@ end
 
 RSpec.configure do |config|
   config.include Spree::TestingSupport::ControllerRequests, type: :controller
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
   config.include Spree::TestingSupport::UrlHelpers
   config.include WebFixtures
 

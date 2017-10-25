@@ -9,10 +9,10 @@ shared_context 'US package setup' do
                       zipcode: '60601',
                       phone: "(555) 555-5555"
   }
-  let(:variant_1) { FactoryGirl.create(:variant, weight: 1) }
-  let(:variant_2) { FactoryGirl.create(:variant, weight: 2) }
+  let(:variant_1) { FactoryBot.create(:variant, weight: 1) }
+  let(:variant_2) { FactoryBot.create(:variant, weight: 2) }
   let(:order) do
-    FactoryGirl.create(
+    FactoryBot.create(
       :order_with_line_items_and_stock_location,
       stock_location: stock_location,
       bill_address: destination,
@@ -44,10 +44,10 @@ shared_context 'Canada package setup' do
                       zipcode: 'G8B1N5',
                       phone: "(555) 555-5555"
   }
-  let(:variant_1) { FactoryGirl.create(:variant, weight: 1) }
-  let(:variant_2) { FactoryGirl.create(:variant, weight: 2) }
+  let(:variant_1) { FactoryBot.create(:variant, weight: 1) }
+  let(:variant_2) { FactoryBot.create(:variant, weight: 2) }
   let(:order) do
-    FactoryGirl.create(
+    FactoryBot.create(
       :order_with_line_items_and_stock_location,
       stock_location: stock_location,
       bill_address: destination,
@@ -79,10 +79,10 @@ shared_context 'France package setup' do
                       phone: "(555) 555-5555"
   }
 
-  let(:variant_1) { FactoryGirl.create(:variant, weight: 1) }
-  let(:variant_2) { FactoryGirl.create(:variant, weight: 2) }
+  let(:variant_1) { FactoryBot.create(:variant, weight: 1) }
+  let(:variant_2) { FactoryBot.create(:variant, weight: 2) }
   let(:order) do
-    FactoryGirl.create(
+    FactoryBot.create(
       :order_with_line_items_and_stock_location,
       stock_location: stock_location,
       bill_address: destination,

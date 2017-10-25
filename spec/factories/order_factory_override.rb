@@ -1,6 +1,6 @@
 require 'spree/testing_support/factories/order_factory'
 
-FactoryGirl.define do
+FactoryBot.define do
   # The order with line items factory was updated in 1.2 to take a stock
   # location as a transient attribute. This brings that change so we can
   # specify the stock location which is used for the origin address for packages
