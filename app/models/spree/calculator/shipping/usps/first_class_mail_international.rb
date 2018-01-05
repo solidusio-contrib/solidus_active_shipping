@@ -13,11 +13,11 @@ module Spree
         end
 
         def self.description
-          I18n.t("usps.first_class_mail_international")
+          Spree.t("usps.first_class_mail_international")
         end
 
-
         protected
+
         def max_weight_for_country(country)
           # if weight in ounces > 3.5, then First Class Mail International is not available for the order
           # https://www.usps.com/ship/first-class-international.htm

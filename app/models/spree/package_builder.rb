@@ -61,7 +61,7 @@ module Spree
               packages << product_package
             end
           else
-            raise Spree::ShippingError, "#{I18n.t(:shipping_error)}: The maximum per package weight for the selected service from the selected country is #{max_weight} ounces."
+            raise Spree::ShippingError, "#{Spree.t(:shipping_error)}: The maximum per package weight for the selected service from the selected country is #{max_weight} ounces."
           end
         end
       end

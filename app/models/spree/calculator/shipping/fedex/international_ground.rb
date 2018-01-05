@@ -5,7 +5,7 @@ module Spree
     module Fedex
       class InternationalGround < Spree::Calculator::Shipping::Fedex::Base
         def self.description
-          I18n.t("fedex.intl_ground")
+          Spree.t("fedex.intl_ground")
         end
       end
     end

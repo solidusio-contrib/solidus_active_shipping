@@ -3,7 +3,7 @@ module Spree
     module CanadaPost
       class XpresspostInternational < Spree::Calculator::Shipping::CanadaPost::Base
         def self.description
-          I18n.t("canada_post.xpresspost_international")
+          Spree.t("canada_post.xpresspost_international")
         end
       end
     end
