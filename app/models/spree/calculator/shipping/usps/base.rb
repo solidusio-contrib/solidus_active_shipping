@@ -31,8 +31,8 @@ module Spree
 
         def carrier
           carrier_details = {
-            :login => Spree::ActiveShipping::Config[:usps_login],
-            :test => Spree::ActiveShipping::Config[:test_mode]
+            login: Spree::ActiveShipping::Config.usps_login,
+            test: Spree::ActiveShipping::Config.test_mode
           }
 
           ::ActiveShipping::USPS.new(carrier_details)

@@ -30,7 +30,7 @@ module Spree
         item_weight *= multiplier
 
         if (item_weight > max_weight) && max_weight > 0
-          raise Spree::ShippingError, "#{I18n.t(:shipping_error)}: The maximum per package weight for the selected service from the selected country is #{max_weight} ounces."
+          raise Spree::ShippingError, "#{Spree.t(:shipping_error)}: The maximum per package weight for the selected service from the selected country is #{max_weight} ounces."
         end
 
         item_weight
@@ -93,6 +93,7 @@ module Spree
         active_shipping_packages << ::ActiveShipping::Package.new(weights.sum, dimensions, units: units) unless weights.empty?
       else
         package_weight = 0
+
         weights.each do |content_weight|
           if package_weight + content_weight <= max_weight
             package_weight += content_weight
@@ -101,6 +102,7 @@ module Spree
             package_weight = content_weight
           end
         end
+
         active_shipping_packages << ::ActiveShipping::Package.new(package_weight, dimensions, units: units) if package_weight > 0
       end
 
