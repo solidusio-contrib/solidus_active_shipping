@@ -9,7 +9,7 @@ module SolidusActiveShipping
 
     config.autoload_paths += %W(#{config.root}/lib)
 
-    initializer 'spree.active_shipping.preferences', before: :load_config_initializers do
+    initializer 'solidus_active_shipping.environment', before: :load_config_initializers do |app|
       Spree::ActiveShipping::Config = SolidusActiveShipping::Configuration.new
     end
 
