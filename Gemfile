@@ -14,7 +14,6 @@ gem 'pg', '~> 0.21'
 gem 'mysql2'
 
 group :development, :test do
-  gem 'byebug'
   gem 'pry-rails'
 end
 
