@@ -3,7 +3,12 @@ Active Shipping
 
 This is a Solidus extension that wraps the popular [active_shipping](http://github.com/Shopify/active_shipping/tree/master) plugin.
 
-**NOTE : This is an old and complex extension we are working on bringing up to our standards. Use with caution**
+**NOTE : This is an old and complex extension that is not under active development. Use with caution**
+
+While the extension is in a working state, Active Shipping is no longer supported by Shopify and this extension is unlikely to receive feature
+updates or bug fixes outside of normal Solidus maintenance or community submissions. Pull requests are welcome and will be reviewed.
+
+We recommend using EasyPost or other carrier-specific integration unless you absolutely need ActiveShipping features.
 
 [![Build Status](https://travis-ci.org/solidusio-contrib/solidus_active_shipping.svg?branch=master)](https://travis-ci.org/solidusio-contrib/solidus_active_shipping)
 
