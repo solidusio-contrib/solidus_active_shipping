@@ -37,7 +37,6 @@ module SolidusActiveShipping
       app.config.assets.precompile += %w[
         admin/product_packages/new.js
         admin/product_packages/edit.js
-        admin/product_packages/index.js
       ]
     end
   end

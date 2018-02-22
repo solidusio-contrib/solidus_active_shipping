@@ -2,10 +2,6 @@
   <li><%= link_to_with_icon('icon-plus', Spree.t(:new_package), new_admin_product_product_package_url(@product), :id => 'new_product_package_link', :class => 'button') %></li>
 <% end %>
 
-<% content_for :head do %>
-  <%= javascript_include_tag 'admin/product_packages/index.js' %>
-<% end %>
-
 <%# This partial was remove in solidus 1.2 but that is also when Spree.solidus_version was added %>
 <%= render :partial => 'spree/admin/shared/product_sub_menu' if !Spree.respond_to?(:solidus_version) %>
 <%= render :partial => 'spree/admin/shared/product_tabs', :locals => { :current => 'Product Packages' } %>
