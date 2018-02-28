@@ -5,7 +5,7 @@ module Spree
     module CanadaPostPws
       class Regular < Spree::Calculator::Shipping::CanadaPostPws::Base
         def self.description
-          I18n.t('canada_post_pws.regular')
+          Spree.t('canada_post_pws.regular')
         end
       end
     end

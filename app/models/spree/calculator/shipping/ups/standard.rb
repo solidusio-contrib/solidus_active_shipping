@@ -3,7 +3,7 @@ module Spree
     module Ups
       class Standard < Spree::Calculator::Shipping::Ups::Base
         def self.description
-          I18n.t("ups.standard")
+          Spree.t("ups.standard")
         end
       end
     end

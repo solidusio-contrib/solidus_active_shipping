@@ -31,8 +31,8 @@ module Spree
 
         def carrier
           carrier_details = {
-            :login => Spree::ActiveShipping::Config[:usps_login],
-            :test => Spree::ActiveShipping::Config[:test_mode]
+            login: Spree::ActiveShipping::Config[:usps_login],
+            test: Spree::ActiveShipping::Config[:test_mode]
           }
 
           ::ActiveShipping::USPS.new(carrier_details)
@@ -66,7 +66,7 @@ module Spree
               message = e.message
             end
 
-            error = Spree::ShippingError.new("#{I18n.t(:shipping_error)}: #{message}")
+            error = Spree::ShippingError.new("#{Spree.t(:shipping_error)}: #{message}")
             Rails.cache.write @cache_key, error #write error to cache to prevent constant re-lookups
             raise error
           end

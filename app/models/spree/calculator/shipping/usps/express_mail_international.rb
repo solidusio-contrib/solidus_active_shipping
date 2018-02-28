@@ -32,10 +32,11 @@ module Spree
         end
 
         def self.description
-          I18n.t("usps.express_mail_international")
+          Spree.t("usps.express_mail_international")
         end
 
         protected
+
         # weight limit in ounces or zero (if there is no limit)
         def max_weight_for_country(country)
           return WEIGHT_LIMITS[country.iso]

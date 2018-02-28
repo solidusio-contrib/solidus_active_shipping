@@ -1,106 +1,93 @@
-<%= render :partial => 'spree/admin/shared/configuration_menu' %>
+<%= render partial: 'spree/admin/shared/configuration_menu' %>
 
 <% content_for :page_title do %>
-<%= Spree.t(:active_shipping_settings) %>
+  <%= Spree.t(:active_shipping_settings) %>
 <% end %>
 
-<%= form_tag admin_active_shipping_settings_path, :method => :put  do |form| %>
-<div id="preferences" data-hook>
-  <fieldset class="general no-border-top">
-    <div class="row">
-      <div class="alpha six columns">
-        <fieldset class="security no-border-bottom">
-          <legend align="center"><%= Spree.t(:ups_settings)%></legend>
-          <% @preferences_UPS.each do |key|
-            type = @config.preference_type(key) %>
-            <div class="field">
-              <%= label_tag(key, Spree.t(key) + ': ') + tag(:br) if type != :boolean %>
-              <%= preference_field_tag(key, @config[key], :type => type) %>
-              <%= label_tag(key, Spree.t(key)) + tag(:br) if type == :boolean %>
-            </div>
+<%= form_tag admin_active_shipping_settings_path, method: :put  do |form| %>
+  <div id="preferences" data-hook>
+    <fieldset class="general no-border-top">
+      <div class="row">
+        <div class="col-5">
+          <fieldset class="currency no-border-bottom">
+            <legend align="center"><%= Spree.t(:fedex_settings)%></legend>
+
+            <% @preferences_FedEx.each do |name| %>
+              <div class="field">
+                <%= render "spree/admin/shared/preference_fields/#{@config.preference_type(name)}",
+                  name:  name.to_s,
+                  value: @config[name],
+                  label: t(name.to_s, scope: 'spree', default: name.to_s.humanize) %>
+              </div>
             <% end %>
           </fieldset>
         </div>
-        <div class="omega six columns">
-          <fieldset class="currency no-border-bottom">
-            <legend align="center"><%= Spree.t(:fedex_settings)%></legend>
-            <% @preferences_FedEx.each do |key|
-              type = @config.preference_type(key) %>
+
+        <div class="col-5">
+          <fieldset class="security no-border-bottom">
+            <legend align="center"><%= Spree.t(:usps_settings)%></legend>
+
+            <% @preferences_USPS.each do |name| %>
               <div class="field">
-                <%= label_tag(key, Spree.t(key) + ': ') + tag(:br) if type != :boolean %>
-                <%= preference_field_tag(key, @config[key], :type => type) %>
-                <%= label_tag(key, Spree.t(key)) + tag(:br) if type == :boolean %>
+                <%= render "spree/admin/shared/preference_fields/#{@config.preference_type(name)}",
+                  name:  name.to_s,
+                  value: @config[name],
+                  label: t(name.to_s, scope: 'spree', default: name.to_s.humanize) %>
               </div>
-              <% end %>
-            </fieldset>
-          </div>
+            <% end %>
+          </fieldset>
         </div>
 
-        <div class="row">
-          <div class="alpha six columns">
-            <fieldset class="security no-border-bottom">
-              <legend align="center"><%= Spree.t(:usps_settings)%></legend>
-              <% @preferences_USPS.each do |key|
-                type = @config.preference_type(key) %>
-                <div class="field">
-                  <%= label_tag(key, Spree.t(key) + ': ') + tag(:br) if type != :boolean %>
-                  <%= preference_field_tag(key, @config[key], :type => type) %>
-                  <%= label_tag(key, Spree.t(key)) + tag(:br) if type == :boolean %>
-                </div>
-                <% end %>
-              </fieldset>
-            </div>
-            <div class="omega six columns">
-              <fieldset class="currency no-border-bottom">
-                <legend align="center"><%= Spree.t(:canada_post_settings)%></legend>
-                <% @preferences_CanadaPost.each do |key|
-                  type = @config.preference_type(key) %>
-                  <div class="field">
-                    <%= label_tag(key, Spree.t(key) + ': ') + tag(:br) if type != :boolean %>
-                    <%= preference_field_tag(key, @config[key], :type => type) %>
-                    <%= label_tag(key, Spree.t(key)) + tag(:br) if type == :boolean %>
-                  </div>
-                  <% end %>
-                </fieldset>
+        <div class="col-5">
+          <fieldset class="currency no-border-bottom">
+            <legend align="center"><%= Spree.t(:canada_post_settings)%></legend>
+
+            <% @preferences_CanadaPost.each do |name| %>
+              <div class="field">
+                <%= render "spree/admin/shared/preference_fields/#{@config.preference_type(name)}",
+                  name:  name.to_s,
+                  value: @config[name],
+                  label: t(name.to_s, scope: 'spree', default: name.to_s.humanize) %>
               </div>
-            </div>
-
-            <div class="row">
-              <div class="omega six columns">
-                <fieldset class="currency no-border-bottom">
-                  <legend align="center"><%= Spree.t(:canada_post_settings)%></legend>
-                  <% @preferences_CanadaPostPws.each do |key|
-                    type = @config.preference_type(key) %>
-                    <div class="field">
-                      <%= label_tag(key, Spree.t(key) + ': ') + tag(:br) if type != :boolean %>
-                      <%= preference_field_tag(key, @config[key], :type => type) %>
-                      <%= label_tag(key, Spree.t(key)) + tag(:br) if type == :boolean %>
-                    </div>
-                    <% end %>
-                  </fieldset>
-                </div>
-
-                <div class="alpha six columns">
-                  <fieldset class="currency no-border-bottom">
-                    <legend align="center"><%= Spree.t(:general_settings)%></legend>
-                    <% @preferences_GeneralSettings.each do |key|
-                      type = @config.preference_type(key) %>
-                      <div class="field">
-                        <%= label_tag(key, Spree.t(key) + ': ') + tag(:br) if type != :boolean %>
-                        <%= preference_field_tag(key, @config[key], :type => type) %>
-                        <%= label_tag(key, Spree.t(key)) + tag(:br) if type == :boolean %>
-                      </div>
-                      <% end %>
-                    </fieldset>
-                  </div>
-                </div>
-
-                <div class="form-buttons filter-actions actions" data-hook="buttons">
-                  <%= button Spree.t(:update), 'icon-refresh' %>
-                  <span class="or"><%= Spree.t(:or) %></span>
-                  <%= link_to_with_icon 'icon-remove', Spree.t(:cancel), edit_admin_active_shipping_settings_url, :class => 'button' %>
-                </div>
-
-              </fieldset>
-            </div>
             <% end %>
+          </fieldset>
+        </div>
+
+        <div class="col-5">
+          <fieldset class="currency no-border-bottom">
+            <legend align="center"><%= Spree.t(:canada_post_pws_settings)%></legend>
+
+            <% @preferences_CanadaPostPws.each do |name| %>
+              <div class="field">
+                <%= render "spree/admin/shared/preference_fields/#{@config.preference_type(name)}",
+                  name:  name.to_s,
+                  value: @config[name],
+                  label: t(name.to_s, scope: 'spree', default: name.to_s.humanize) %>
+              </div>
+            <% end %>
+          </fieldset>
+        </div>
+
+        <div class="col-5">
+          <fieldset class="currency no-border-bottom">
+            <legend align="center"><%= Spree.t(:general_settings)%></legend>
+
+            <% @preferences_GeneralSettings.each do |name| %>
+              <div class="field">
+                <%= render "spree/admin/shared/preference_fields/#{@config.preference_type(name)}",
+                  name:  name.to_s,
+                  value: @config[name],
+                  label: t(name.to_s, scope: 'spree', default: name.to_s.humanize) %>
+              </div>
+            <% end %>
+          </fieldset>
+        </div>
+      </div>
+
+      <div class="form-buttons filter-actions actions" data-hook="buttons">
+        <%= button Spree.t(:update) %>
+        <%= button_link_to Spree.t(:cancel), edit_admin_active_shipping_settings_url %>
+      </div>
+    </fieldset>
+  </div>
+<% end %>

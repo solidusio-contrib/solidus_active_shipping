@@ -34,7 +34,7 @@ module Spree
         end
 
         def self.description
-          I18n.t("usps.global_express_guaranteed")
+          Spree.t("usps.global_express_guaranteed")
         end
 
         protected

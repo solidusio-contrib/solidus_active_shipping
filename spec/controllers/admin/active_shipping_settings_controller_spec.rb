@@ -4,9 +4,9 @@ describe Spree::Admin::ActiveShippingSettingsController do
   stub_authorization!
 
   context '#edit' do
-    it 'should assign a Spree::ActiveShippingConfiguration and render the view' do
+    it 'should assign a Solidus::ActiveShippingConfiguration and render the view' do
       get :edit
-      expect(assigns(:config)).to be_an_instance_of(Spree::ActiveShippingConfiguration)
+      expect(assigns(:config)).to be_an_instance_of(SolidusActiveShipping::Configuration)
       expect(response).to render_template('edit')
     end
   end
