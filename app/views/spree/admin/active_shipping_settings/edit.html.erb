@@ -12,6 +12,21 @@
           <fieldset class="currency no-border-bottom">
             <legend align="center"><%= Spree.t(:fedex_settings)%></legend>
 
+            <% @preferences_UPS.each do |name| %>
+              <div class="field">
+                <%= render "spree/admin/shared/preference_fields/#{@config.preference_type(name)}",
+                  name:  name.to_s,
+                  value: @config[name],
+                  label: t(name.to_s, scope: 'spree', default: name.to_s.humanize) %>
+              </div>
+            <% end %>
+          </fieldset>
+        </div>
+
+        <div class="col-5">
+          <fieldset class="currency no-border-bottom">
+            <legend align="center"><%= Spree.t(:fedex_settings)%></legend>
+
             <% @preferences_FedEx.each do |name| %>
               <div class="field">
                 <%= render "spree/admin/shared/preference_fields/#{@config.preference_type(name)}",
