@@ -19,7 +19,7 @@ describe "Checkout", type: :feature do
       phone: "(555) 555-5555"
     }
 
-    it "does not break the per-item shipping method calculator", js: true do
+    it "does not break the per-item shipping method calculator" do
       add_to_cart(mug)
 
       click_button "Checkout"
