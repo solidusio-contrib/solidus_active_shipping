@@ -3,7 +3,7 @@ module Spree
     module Ups
       class NextDayAirEarlyAm < Spree::Calculator::Shipping::Ups::Base
         def self.description
-          Spree.t("ups.next_day_air_early_am")
+          I18n.t('spree.ups.next_day_air_early_am')
         end
       end
     end

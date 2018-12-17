@@ -3,7 +3,7 @@ module Spree
     module CanadaPost
       class SmallPacketsAir < Spree::Calculator::Shipping::CanadaPost::Base
         def self.description
-          Spree.t("canada_post.small_packets_air")
+          I18n.t('spree.canada_post.small_packets_air')
         end
       end
     end

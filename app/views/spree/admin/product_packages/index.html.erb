@@ -1,5 +1,5 @@
 <% content_for :page_actions do %>
-  <li><%= link_to_with_icon('icon-plus', Spree.t(:new_package), new_admin_product_product_package_url(@product), :id => 'new_product_package_link', :class => 'button') %></li>
+  <li><%= link_to_with_icon('icon-plus', I18n.t('spree.new_package'), new_admin_product_product_package_url(@product), :id => 'new_product_package_link', :class => 'button') %></li>
 <% end %>
 
 <%# This partial was remove in solidus 1.2 but that is also when Spree.solidus_version was added %>
@@ -10,16 +10,16 @@
 
 <% unless @product.reload.product_packages.any? %>
   <div class="no-objects-found">
-    <%= Spree.t(:no_packages_found) %>.
+    <%= I18n.t('spree.no_packages_found') %>.
   </div>
 <% else %>
   <table class="index">
     <thead data-hook="option_header">
       <tr data-hook="product_packages_header">
-        <th><%= Spree.t(:length) %></th>
-        <th><%= Spree.t(:width) %></th>
-        <th><%= Spree.t(:height) %></th>
-        <th><%= Spree.t(:weight) %></th>
+        <th><%= I18n.t('spree.length') %></th>
+        <th><%= I18n.t('spree.width') %></th>
+        <th><%= I18n.t('spree.height') %></th>
+        <th><%= I18n.t('spree.weight') %></th>
         <th class="actions"></th>
       </tr>
     </thead>
@@ -31,7 +31,7 @@
           <td><%= package.height %></td>
           <td><%= package.weight %></td>
           <td class="actions">
-            <%= link_to_with_icon 'icon-edit', Spree.t(:edit), edit_admin_product_product_package_url(@product, package), :class => "edit", :no_text => true, :data => {:action => 'edit'} %>
+            <%= link_to_with_icon 'icon-edit', I18n.t('spree.edit'), edit_admin_product_product_package_url(@product, package), :class => "edit", :no_text => true, :data => {:action => 'edit'} %>
             &nbsp;
             <%= link_to_delete package, { :url => admin_product_product_package_url(@product, package), :no_text => true }%>
           </td>

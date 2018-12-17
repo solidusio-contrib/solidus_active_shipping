@@ -3,7 +3,7 @@ module Spree
     module Ups
       class Saver < Spree::Calculator::Shipping::Ups::Base
         def self.description
-          Spree.t("ups.saver")
+          I18n.t('spree.ups.saver')
         end
       end
     end

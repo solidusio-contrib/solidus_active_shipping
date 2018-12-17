@@ -5,7 +5,7 @@ module Spree
     module Fedex
       class FirstOvernight < Spree::Calculator::Shipping::Fedex::Base
         def self.description
-          Spree.t("fedex.first_overnight")
+          I18n.t('spree.fedex.first_overnight')
         end
       end
     end

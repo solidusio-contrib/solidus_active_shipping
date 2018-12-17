@@ -13,7 +13,7 @@ module Spree
         end
 
         def self.description
-          Spree.t("usps.first_class_mail_parcel")
+          I18n.t('spree.usps.first_class_mail_parcel')
         end
 
         protected

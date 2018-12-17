@@ -5,7 +5,7 @@ module Spree
     module Fedex
       class OneDayFreightSaturdayDelivery < Spree::Calculator::Shipping::Fedex::Base
         def self.description
-          Spree.t("fedex.one_day_freight_saturday_delivery")
+          I18n.t('spree.fedex.one_day_freight_saturday_delivery')
         end
       end
     end

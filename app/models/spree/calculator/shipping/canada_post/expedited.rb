@@ -3,7 +3,7 @@ module Spree
     module CanadaPost
       class Expedited < Spree::Calculator::Shipping::CanadaPost::Base
         def self.description
-          Spree.t("canada_post.expedited")
+          I18n.t('spree.canada_post.expedited')
         end
       end
    end

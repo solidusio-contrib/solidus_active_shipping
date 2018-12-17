@@ -3,7 +3,7 @@ module Spree
     module Ups
       class WorldwideExpedited < Spree::Calculator::Shipping::Ups::Base
         def self.description
-          Spree.t("ups.worldwide_expedited")
+          I18n.t('spree.ups.worldwide_expedited')
         end
       end
     end

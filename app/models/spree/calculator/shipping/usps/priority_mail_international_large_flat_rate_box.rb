@@ -27,7 +27,7 @@ module Spree
         end
 
         def self.description
-          Spree.t("usps.priority_mail_international_large_flat_rate_box")
+          I18n.t('spree.usps.priority_mail_international_large_flat_rate_box')
         end
 
         protected

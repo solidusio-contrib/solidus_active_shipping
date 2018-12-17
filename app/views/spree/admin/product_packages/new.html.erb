@@ -1,6 +1,6 @@
 <%= form_for [:admin, @product, @product_package], :html => { :multipart => true } do |f| %>
   <fieldset data-hook="new_product_package">
-    <legend align="center"><%= Spree.t(:new_package) %></legend>
+    <legend align="center"><%= I18n.t('spree.new_package') %></legend>
 
       <%= render :partial => 'form', :locals => { :f => f } %>
       <%= render partial: 'spree/admin/shared/new_resource_links' %>

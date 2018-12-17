@@ -5,7 +5,7 @@ module Spree
     module CanadaPostPws
       class XpresspostUsa < Spree::Calculator::Shipping::CanadaPostPws::Base
         def self.description
-          Spree.t('canada_post_pws.xpresspost_usa')
+          I18n.t('spree.canada_post_pws.xpresspost_usa')
         end
       end
     end

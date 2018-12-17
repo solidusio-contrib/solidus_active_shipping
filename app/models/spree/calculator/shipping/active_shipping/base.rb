@@ -109,7 +109,7 @@ module Spree
 
         def country_weight_error?(package)
           max_weight = max_weight_for_country(package.order.ship_address.country)
-          raise Spree::ShippingError, "#{Spree.t(:shipping_error)}: The maximum per package weight for the selected service from the selected country is #{max_weight} ounces." unless valid_weight_for_package?(package, max_weight)
+          raise Spree::ShippingError, "#{I18n.t('spree.shipping_error')}: The maximum per package weight for the selected service from the selected country is #{max_weight} ounces." unless valid_weight_for_package?(package, max_weight)
         end
 
         # zero weight check means no check
@@ -144,7 +144,7 @@ module Spree
             message = e.message
           end
 
-          error = Spree::ShippingError.new("#{Spree.t(:shipping_error)}: #{message}")
+          error = Spree::ShippingError.new("#{I18n.t('spree.shipping_error')}: #{message}")
           Rails.cache.write @cache_key, error # write error to cache to prevent constant re-lookups
           raise error
         end
@@ -166,7 +166,7 @@ module Spree
             message = re.message
           end
 
-          error = Spree::ShippingError.new("#{Spree.t(:shipping_error)}: #{message}")
+          error = Spree::ShippingError.new("#{I18n.t('spree.shipping_error')}: #{message}")
           Rails.cache.write @cache_key + '-timings', error # write error to cache to prevent constant re-lookups
           raise error
         end

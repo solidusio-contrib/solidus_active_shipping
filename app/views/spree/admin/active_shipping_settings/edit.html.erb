@@ -1,7 +1,7 @@
 <%= render partial: 'spree/admin/shared/configuration_menu' %>
 
 <% content_for :page_title do %>
-  <%= Spree.t(:active_shipping_settings) %>
+  <%= I18n.t('spree.active_shipping_settings') %>
 <% end %>
 
 <%= form_tag admin_active_shipping_settings_path, method: :put  do |form| %>
@@ -10,7 +10,7 @@
       <div class="row">
         <div class="col-5">
           <fieldset class="currency no-border-bottom">
-            <legend align="center"><%= Spree.t(:ups_settings)%></legend>
+            <legend align="center"><%= I18n.t('spree.ups_settings')%></legend>
 
             <% @preferences_UPS.each do |name| %>
               <div class="field">
@@ -25,7 +25,7 @@
 
         <div class="col-5">
           <fieldset class="currency no-border-bottom">
-            <legend align="center"><%= Spree.t(:fedex_settings)%></legend>
+            <legend align="center"><%= I18n.t('spree.fedex_settings')%></legend>
 
             <% @preferences_FedEx.each do |name| %>
               <div class="field">
@@ -40,7 +40,7 @@
 
         <div class="col-5">
           <fieldset class="security no-border-bottom">
-            <legend align="center"><%= Spree.t(:usps_settings)%></legend>
+            <legend align="center"><%= I18n.t('spree.usps_settings')%></legend>
 
             <% @preferences_USPS.each do |name| %>
               <div class="field">
@@ -55,7 +55,7 @@
 
         <div class="col-5">
           <fieldset class="currency no-border-bottom">
-            <legend align="center"><%= Spree.t(:canada_post_settings)%></legend>
+            <legend align="center"><%= I18n.t('spree.canada_post_settings')%></legend>
 
             <% @preferences_CanadaPost.each do |name| %>
               <div class="field">
@@ -70,7 +70,7 @@
 
         <div class="col-5">
           <fieldset class="currency no-border-bottom">
-            <legend align="center"><%= Spree.t(:canada_post_pws_settings)%></legend>
+            <legend align="center"><%= I18n.t('spree.canada_post_pws_settings')%></legend>
 
             <% @preferences_CanadaPostPws.each do |name| %>
               <div class="field">
@@ -85,7 +85,7 @@
 
         <div class="col-5">
           <fieldset class="currency no-border-bottom">
-            <legend align="center"><%= Spree.t(:general_settings)%></legend>
+            <legend align="center"><%= I18n.t('spree.general_settings')%></legend>
 
             <% @preferences_GeneralSettings.each do |name| %>
               <div class="field">
@@ -100,8 +100,8 @@
       </div>
 
       <div class="form-buttons filter-actions actions" data-hook="buttons">
-        <%= button Spree.t(:update) %>
-        <%= button_link_to Spree.t(:cancel), edit_admin_active_shipping_settings_url %>
+        <%= button I18n.t('spree.update') %>
+        <%= button_link_to I18n.t('spree.cancel'), edit_admin_active_shipping_settings_url %>
       </div>
     </fieldset>
   </div>

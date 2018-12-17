@@ -66,7 +66,7 @@ module Spree
               message = e.message
             end
 
-            error = Spree::ShippingError.new("#{Spree.t(:shipping_error)}: #{message}")
+            error = Spree::ShippingError.new("#{I18n.t('spree.shipping_error')}: #{message}")
             Rails.cache.write @cache_key, error #write error to cache to prevent constant re-lookups
             raise error
           end
