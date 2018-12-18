@@ -6,8 +6,8 @@ FactoryBot.define do
   # we will need to bring this in until we no longer care about old Solidus
   factory :state_with_autodiscover, class: Spree::State do
     transient do
-      country_iso 'US'
-      state_code 'AL'
+      country_iso { 'US' }
+      state_code { 'AL' }
 
       carmen_subregion do
         carmen_country = Carmen::Country.coded(country.iso)
