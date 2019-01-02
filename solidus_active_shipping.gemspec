@@ -28,7 +28,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'solidus_support'
   s.add_dependency 'solidus_backend', solidus_version
   s.add_dependency 'solidus_api', solidus_version
-  s.add_dependency 'active_shipping', '~> 1.13'
+  s.add_dependency 'active_shipping', ['>= 1.13', '~> 2.1.1']
 
   s.add_development_dependency 'byebug'
   s.add_development_dependency 'capybara', '~> 2.1'
