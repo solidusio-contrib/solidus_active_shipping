@@ -9,6 +9,12 @@ else
   gem "rails_test_params_backport"
 end
 
+if branch < 'v2.5'
+  gem 'factory_bot', '4.10.0'
+else
+  gem 'factory_bot', '> 4.10.0'
+end
+
 gem 'sqlite3'
 gem 'pg', '~> 0.21'
 gem 'mysql2', '~> 0.4.10'
