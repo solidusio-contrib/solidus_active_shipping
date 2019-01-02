@@ -3,7 +3,7 @@ module Spree
     module Fedex
       class TwoDayFreight < Spree::Calculator::Shipping::Fedex::Base
         def self.description
-          Spree.t("fedex.two_day_freight")
+          I18n.t('spree.fedex.two_day_freight')
         end
       end
     end

@@ -5,7 +5,7 @@ module Spree
     module Fedex
       class InternationalFirst < Spree::Calculator::Shipping::Fedex::Base
         def self.description
-          Spree.t("fedex.intl_first")
+          I18n.t('spree.fedex.intl_first')
         end
       end
     end

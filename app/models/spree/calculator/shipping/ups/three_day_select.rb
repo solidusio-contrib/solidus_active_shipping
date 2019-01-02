@@ -3,7 +3,7 @@ module Spree
     module Ups
       class ThreeDaySelect < Spree::Calculator::Shipping::Ups::Base
         def self.description
-          Spree.t("ups.three_day_select")
+          I18n.t('spree.ups.three_day_select')
         end
       end
     end

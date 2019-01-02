@@ -3,7 +3,7 @@ module Spree
     module Ups
       class Ground < Spree::Calculator::Shipping::Ups::Base
         def self.description
-          Spree.t("ups.ground")
+          I18n.t('spree.ups.ground')
         end
       end
     end

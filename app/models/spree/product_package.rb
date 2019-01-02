@@ -4,7 +4,7 @@ module Spree
 
     validates :length, :width, :height, :weight,
               numericality: { only_integer: true,
-                              message: Spree.t('validation.must_be_int'),
+                              message: I18n.t('spree.validation.must_be_int'),
                               greater_than: 0 }
   end
 end

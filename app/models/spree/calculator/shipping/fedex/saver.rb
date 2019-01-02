@@ -3,7 +3,7 @@ module Spree
     module Fedex
       class Saver < Spree::Calculator::Shipping::Fedex::Base
         def self.description
-          Spree.t("fedex.saver")
+          I18n.t('spree.fedex.saver')
         end
       end
     end

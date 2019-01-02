@@ -5,7 +5,7 @@ module Spree
     module Fedex
       class InternationalEconomyFreight < Spree::Calculator::Shipping::Fedex::Base
         def self.description
-          Spree.t("fedex.intl_economy_freight")
+          I18n.t('spree.fedex.intl_economy_freight')
         end
       end
     end

@@ -3,7 +3,7 @@ module Spree
     module CanadaPost
       class ParcelSurface < Spree::Calculator::Shipping::CanadaPost::Base
         def self.description
-          Spree.t("canada_post.parcel_surface")
+          I18n.t('spree.canada_post.parcel_surface')
         end
       end
     end

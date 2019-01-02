@@ -5,7 +5,7 @@ module Spree
     module CanadaPostPws
       class InternationalParcelSurface < Spree::Calculator::Shipping::CanadaPostPws::Base
         def self.description
-          Spree.t('canada_post_pws.international_parcel_surface')
+          I18n.t('spree.canada_post_pws.international_parcel_surface')
         end
       end
     end

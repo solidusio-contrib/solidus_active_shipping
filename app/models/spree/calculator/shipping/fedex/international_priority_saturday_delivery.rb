@@ -5,7 +5,7 @@ module Spree
     module Fedex
       class InternationalPrioritySaturdayDelivery < Spree::Calculator::Shipping::Fedex::Base
         def self.description
-          Spree.t("fedex.intl_priority_saturday_delivery")
+          I18n.t('spree.fedex.intl_priority_saturday_delivery')
         end
       end
     end
